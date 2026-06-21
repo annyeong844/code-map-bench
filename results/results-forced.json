@@ -1,0 +1,347 @@
+[
+  {
+    "id": "C1",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 6,
+    "tools": {
+      "cmGrep": 2,
+      "locate": 1,
+      "cmRead": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 6,
+    "tools": {
+      "semantic": 2,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 7,
+    "tools": {
+      "cmGrep": 2,
+      "locate": 1,
+      "cmRead": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 6,
+    "tools": {
+      "semantic": 2,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "turns": 5,
+    "tools": {
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "turns": 5,
+    "tools": {
+      "Grep": 4
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 5,
+    "tools": {
+      "cmGrep": 2,
+      "cmRead": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 5,
+    "tools": {
+      "semantic": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 6,
+    "tools": {
+      "semantic": 2,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "locate": 1,
+      "cmGrep": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 10,
+    "tools": {
+      "cmGrep": 5,
+      "cmRead": 1,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "semantic": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 7,
+    "tools": {
+      "locate": 1,
+      "cmGrep": 2,
+      "graph": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "semantic": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "turns": 5,
+    "tools": {
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "turns": 7,
+    "tools": {
+      "Grep": 5,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 9,
+    "tools": {
+      "cmGrep": 3,
+      "locate": 3,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 7,
+    "tools": {
+      "cmGrep": 1,
+      "locate": 2,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 8,
+    "tools": {
+      "semantic": 1,
+      "Read": 2,
+      "Grep": 3
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 13,
+    "tools": {
+      "semantic": 1,
+      "Grep": 5,
+      "Read": 5
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "A",
+    "trial": 0,
+    "correct": false,
+    "turns": 13,
+    "tools": {
+      "Grep": 9,
+      "Read": 3
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 0,
+    "correct": false,
+    "turns": 9,
+    "tools": {
+      "semantic": 4,
+      "Read": 3
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 0,
+    "correct": false,
+    "turns": 16,
+    "tools": {
+      "cmGrep": 12,
+      "locate": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 1,
+    "correct": false,
+    "turns": 8,
+    "tools": {
+      "semantic": 4,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "turns": 23,
+    "tools": {
+      "Grep": 24,
+      "Read": 16,
+      "other": 17,
+      "Glob": 1
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 42,
+    "tools": {
+      "cmGrep": 29,
+      "locate": 1,
+      "Read": 8,
+      "graph": 1,
+      "Glob": 1
+    }
+  }
+]

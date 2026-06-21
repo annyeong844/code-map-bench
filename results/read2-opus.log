@@ -1,0 +1,15 @@
+  A #3: covered 6/6 turns=13 workTok=13700
+  A #0: covered 6/6 turns=13 workTok=13703
+  A #2: covered 6/6 turns=13 workTok=13812
+  A #1: covered 6/6 turns=14 workTok=15149
+  B #0: covered 6/6 turns=8 workTok=12239
+  B #1: covered 6/6 turns=8 workTok=12196
+  A #4: covered 6/6 turns=13 workTok=13617
+  B #2: covered 6/6 turns=8 workTok=12145
+  B #3: covered 6/6 turns=8 workTok=12244
+  B #4: covered 6/6 turns=8 workTok=12032
+
+=== read-efficiency (model=opus): summarize 6 spread functions ===
+  A: covered 6.0/6  turns 13.2  workTok 13996
+  B: covered 6.0/6  turns 8.0  workTok 12171
+  → B/A workTok ratio: 87%  (B saves 13%)

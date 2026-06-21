@@ -1,0 +1,225 @@
+[
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 4,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 1,
+    "correct": false,
+    "turns": 5,
+    "tools": {
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 7,
+    "tools": {
+      "Grep": 4,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 0,
+    "correct": false,
+    "turns": 9,
+    "tools": {
+      "Grep": 7,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 6,
+    "tools": {
+      "Grep": 4,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Glob": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Glob": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Glob": 1,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 3,
+    "tools": {
+      "Read": 2
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 8,
+    "tools": {
+      "Grep": 5,
+      "Read": 2
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 9,
+    "tools": {
+      "Grep": 5,
+      "Read": 3
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "turns": 8,
+    "tools": {
+      "Grep": 6,
+      "Read": 1
+    }
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "turns": 14,
+    "tools": {
+      "Grep": 9,
+      "Read": 4
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "turns": 11,
+    "tools": {
+      "Grep": 7,
+      "Read": 3
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 0,
+    "correct": false,
+    "turns": 11,
+    "tools": {
+      "Grep": 7,
+      "Read": 2,
+      "other": 1
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "turns": 16,
+    "tools": {
+      "Grep": 11,
+      "Read": 3,
+      "Glob": 1
+    }
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 1,
+    "correct": false,
+    "turns": 3,
+    "tools": {
+      "other": 13,
+      "Grep": 9,
+      "Glob": 3,
+      "Read": 12
+    }
+  }
+]

@@ -1,0 +1,422 @@
+[
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 74324,
+    "cost": 0.1886085,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 218843,
+    "cost": 0.2825965,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 73558,
+    "cost": 0.163397,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 94703,
+    "cost": 0.19813000000000003,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 74797,
+    "cost": 0.17064000000000001,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96597,
+    "cost": 0.213443,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 9,
+    "logical": 76033,
+    "cost": 0.187149,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 218164,
+    "cost": 0.2565775,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77507,
+    "cost": 0.2055735,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96156,
+    "cost": 0.2071775,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 99976,
+    "cost": 0.2090415,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 95761,
+    "cost": 0.199404,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 73656,
+    "cost": 0.159313,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 95617,
+    "cost": 0.1977955,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 9,
+    "logical": 75519,
+    "cost": 0.18324900000000002,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 219746,
+    "cost": 0.265897,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 100516,
+    "cost": 0.2158625,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96104,
+    "cost": 0.2129945,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77691,
+    "cost": 0.206128,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96151,
+    "cost": 0.20705800000000002,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77566,
+    "cost": 0.205794,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96366,
+    "cost": 0.2111655,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 73979,
+    "cost": 0.1643975,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96278,
+    "cost": 0.2104405,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 13,
+    "logical": 75680,
+    "cost": 0.182872,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 218385,
+    "cost": 0.25817500000000004,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 13,
+    "logical": 76195,
+    "cost": 0.1864355,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 95696,
+    "cost": 0.1985055,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 16,
+    "logical": 102603,
+    "cost": 0.23981600000000003,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96177,
+    "cost": 0.206844,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 9,
+    "logical": 75952,
+    "cost": 0.1888175,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96387,
+    "cost": 0.2101945,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 100917,
+    "cost": 0.21622550000000001,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 218438,
+    "cost": 0.25926499999999997,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77489,
+    "cost": 0.206367,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 113413,
+    "cost": 0.2672555,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 13,
+    "logical": 75329,
+    "cost": 0.176422,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 95841,
+    "cost": 0.20031349999999998,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 73748,
+    "cost": 0.160208,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96595,
+    "cost": 0.212748,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 73677,
+    "cost": 0.1573215,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 217898,
+    "cost": 0.254658,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77317,
+    "cost": 0.20446399999999998,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96248,
+    "cost": 0.211805,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77748,
+    "cost": 0.20760900000000002,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96753,
+    "cost": 0.21759099999999998,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77346,
+    "cost": 0.20446699999999998,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 95868,
+    "cost": 0.20188250000000002,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 74118,
+    "cost": 0.1643755,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 218395,
+    "cost": 0.2025345,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 9,
+    "logical": 76708,
+    "cost": 0.1935305,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96313,
+    "cost": 0.210894,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77317,
+    "cost": 0.20227,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96606,
+    "cost": 0.21453699999999998,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 8,
+    "logical": 74443,
+    "cost": 0.1697105,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 96160,
+    "cost": 0.205431,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 14,
+    "logical": 77294,
+    "cost": 0.20164749999999998,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 8,
+    "logical": 191464,
+    "cost": 0.23505049999999997,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "turns": 9,
+    "logical": 76101,
+    "cost": 0.1896915,
+    "covered": 6
+  },
+  {
+    "cond": "B_single",
+    "turns": 9,
+    "logical": 221876,
+    "cost": 0.2786775,
+    "covered": 6
+  }
+]

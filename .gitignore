@@ -1,0 +1,9 @@
+# regenerable / heavy — not vendored (see RUNBOOK to recreate)
+*.map.json
+vecs.npy
+meta.json
+/requests/
+/django/
+/cline*/
+node_modules/
+__pycache__/

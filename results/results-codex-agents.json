@@ -1,0 +1,50 @@
+[
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 94871,
+    "covered": 6
+  },
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 96404,
+    "covered": 6
+  },
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 95157,
+    "covered": 6
+  },
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 95386,
+    "covered": 6
+  },
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 96125,
+    "covered": 6
+  },
+  {
+    "mcp": 2,
+    "shell": 0,
+    "usedCodemap": true,
+    "fullReplace": true,
+    "logical": 96531,
+    "covered": 6
+  }
+]

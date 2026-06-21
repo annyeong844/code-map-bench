@@ -1,0 +1,15 @@
+  A #2: covered 6/6 turns=13 workTok=5696
+  A #3: covered 6/6 turns=19 workTok=6759
+  A #0: covered 6/6 turns=26 workTok=8424
+  A #1: covered 6/6 turns=26 workTok=8466
+  B #1: covered 6/6 turns=13 workTok=4943
+  A #4: covered 6/6 turns=26 workTok=15610
+  B #2: covered 6/6 turns=13 workTok=5095
+  B #0: covered 6/6 turns=20 workTok=14242
+  B #3: covered 6/6 turns=13 workTok=5101
+  B #4: covered 6/6 turns=13 workTok=5138
+
+=== read-efficiency (model=sonnet): summarize 6 spread functions ===
+  A: covered 6.0/6  turns 22.0  workTok 8991
+  B: covered 6.0/6  turns 14.4  workTok 6904
+  → B/A workTok ratio: 77%  (B saves 23%)

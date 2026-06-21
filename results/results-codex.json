@@ -1,0 +1,98 @@
+[
+  {
+    "cond": "A_native",
+    "logical": 131071,
+    "inT": 128915,
+    "out": 2156,
+    "cmds": 10,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 60797,
+    "inT": 59933,
+    "out": 864,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 169236,
+    "inT": 166640,
+    "out": 2596,
+    "cmds": 11,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61453,
+    "inT": 60711,
+    "out": 742,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 131628,
+    "inT": 129656,
+    "out": 1972,
+    "cmds": 10,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61403,
+    "inT": 60718,
+    "out": 685,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 171960,
+    "inT": 169871,
+    "out": 2089,
+    "cmds": 10,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61726,
+    "inT": 60746,
+    "out": 980,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 116067,
+    "inT": 114099,
+    "out": 1968,
+    "cmds": 7,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61322,
+    "inT": 60714,
+    "out": 608,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 95209,
+    "inT": 93380,
+    "out": 1829,
+    "cmds": 7,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61694,
+    "inT": 60718,
+    "out": 976,
+    "cmds": 1,
+    "covered": 6
+  }
+]

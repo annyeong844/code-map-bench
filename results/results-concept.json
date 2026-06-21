@@ -1,0 +1,452 @@
+[
+  {
+    "id": "C1",
+    "cond": "A",
+    "trial": 2,
+    "correct": true,
+    "result": "The retry/wait-and-resend logic lives in:\n\n**`src/core/api/retry.ts`** — the `withRetry()` decorator (its inner `descriptor.value` async generator).\n\nIt wraps each provider's `createMessage` stream. On a `429` status or a `RetriableError` (the \"overloaded/rejected\" case), it computes a delay — from the `retry-after` / `x-ratelimit-reset` / `ratelimit-reset` header or `error.retryAfter`, otherwise exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`) — then `await`s a `setTimeout` (line 81) before looping to retry, up to `maxRetries` (default 3).",
+    "turns": 3,
+    "cost": 0.21509250000000002,
+    "ms": 24391
+  },
+  {
+    "id": "C1",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "result": "The retry/wait-and-retry logic lives in:\n\n**`src/core/api/retry.ts`** — the `withRetry()` decorator (its inner `descriptor.value` async generator).\n\nIt wraps a provider's `createMessage` stream and, on a `429`/`RetriableError` (or any error when `retryAllErrors` is set), waits via `await new Promise((resolve) => setTimeout(resolve, delay))` — using the `retry-after`/rate-limit-reset header if present, otherwise exponential backoff — then re-yields the request, up to `maxRetries` (default 3).",
+    "turns": 3,
+    "cost": 0.1200425,
+    "ms": 26312
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 2,
+    "correct": true,
+    "result": "The retry logic lives in **`src/core/api/retry.ts`** — specifically the **`withRetry`** decorator (and its `RetriableError` companion class).\n\nIt wraps a provider's streaming method in a loop that catches errors, treats `status === 429` / `RetriableError` (and optionally all errors) as retriable, waits via `await new Promise(resolve => setTimeout(resolve, delay))`, and retries. The delay comes from the `retry-after` / `x-ratelimit-reset` / `ratelimit-reset` headers, falling back to exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`).",
+    "turns": 3,
+    "cost": 0.1235465,
+    "ms": 25018
+  },
+  {
+    "id": "C1",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "result": "**File:** `src/core/api/retry.ts` — the `withRetry` decorator (its returned async-generator `descriptor.value`).\n\nThis is where it waits and retries. On a caught error it checks `error?.status === 429` or a `RetriableError` (the \"overloaded/rejected\" case), then sleeps via `await new Promise((resolve) => setTimeout(resolve, delay))` — using the `retry-after`/`x-ratelimit-reset`/`ratelimit-reset` header if present, otherwise exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`) — before re-running the request, up to `maxRetries` (default 3). Provider `createMessage` methods are annotated with `@withRetry()`.",
+    "turns": 3,
+    "cost": 0.21457950000000003,
+    "ms": 27454
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "result": "The retry logic lives in **`src/core/api/retry.ts`**, in the **`withRetry()`** decorator (it wraps each provider's streaming `createMessage` generator).\n\nWhen the server is overloaded or rejects the request — detected via `error?.status === 429` or a thrown `RetriableError` — the wait-and-retry happens at line 81:\n\n```ts\nawait new Promise((resolve) => setTimeout(resolve, delay))\n```\n\nThe `delay` is taken from the response's `retry-after` / `x-ratelimit-reset` / `ratelimit-reset` header (or `error.retryAfter`), falling back to exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`). It retries up to `maxRetries` (default 3) times before rethrowing.",
+    "turns": 3,
+    "cost": 0.21524400000000002,
+    "ms": 28290
+  },
+  {
+    "id": "C1",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "result": "The wait-and-retry happens in **`src/core/api/retry.ts`**, in the **`withRetry`** decorator (the generator returned by its `descriptor.value`).\n\nIt wraps each provider's streaming `createMessage`. On a catch, it treats `error.status === 429` or a `RetriableError` as overload/rejection, then computes a delay — honoring `retry-after` / `x-ratelimit-reset` / `ratelimit-reset` headers (or the error's `retryAfter`), falling back to exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`) — and waits via `await new Promise((resolve) => setTimeout(resolve, delay))` before the next of `maxRetries` (default 3) attempts.",
+    "turns": 4,
+    "cost": 0.22316750000000002,
+    "ms": 28934
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 2,
+    "correct": true,
+    "result": "The retry/wait logic lives in:\n\n**`src/core/api/retry.ts`** — the **`withRetry()`** decorator (a generator-wrapping method decorator).\n\nWhen a request throws, it catches the error, treats `status === 429` or a `RetriableError` as retriable, computes a delay from rate-limit headers (`retry-after` / `x-ratelimit-reset` / `ratelimit-reset` / `error.retryAfter`) or falls back to exponential backoff, then `await new Promise(resolve => setTimeout(resolve, delay))` before re-running the wrapped `createMessage` generator. The `RetriableError` class in the same file (defaults to `status = 429`) is how providers signal an overloaded/rejecting server.",
+    "turns": 3,
+    "cost": 0.12350850000000001,
+    "ms": 22515
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "result": "The retry/wait-and-resend logic lives in:\n\n**File:** `src/core/api/retry.ts`\n**Symbol:** the `withRetry()` decorator (its async-generator wrapper), supported by the `RetriableError` class.\n\nIt wraps each provider's `createMessage` generator. On a `429` (rate-limit) or `RetriableError` (server overloaded/rejection), it computes a delay — from a `retry-after` / `ratelimit-reset` header if present, otherwise exponential backoff (`baseDelay * 2 ** attempt`, capped at `maxDelay`) — then `await new Promise(resolve => setTimeout(resolve, delay))` (line 81) before retrying, up to `maxRetries` (default 3).",
+    "turns": 3,
+    "cost": 0.12448200000000001,
+    "ms": 24234
+  },
+  {
+    "id": "C1",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "result": "The retry/wait-and-retry logic lives in:\n\n**`src/core/api/retry.ts`** — the `withRetry()` decorator (its inner `descriptor.value` async generator).\n\nIt wraps each provider's `createMessage` stream. On a catch, it treats `status === 429` or a `RetriableError` (also any error when `retryAllErrors` is set) as retriable, computes a delay from the `retry-after` / `x-ratelimit-reset` / `ratelimit-reset` headers (or exponential backoff via `baseDelay * 2 ** attempt`), then `await new Promise(setTimeout)` before looping to retry — up to `maxRetries` (default 3).",
+    "turns": 3,
+    "cost": 0.12360449999999999,
+    "ms": 30512
+  },
+  {
+    "id": "C2",
+    "cond": "A",
+    "trial": 2,
+    "correct": false,
+    "result": "The deduplication of concurrent identical network requests is in:\n\n**`src/core/controller/models/refreshOpenRouterModels.ts`** — the module-level `pendingRefresh` promise guard inside the `refreshOpenRouterModels()` function.\n\nIf a fetch is already in flight, the function returns the existing `pendingRefresh` promise instead of starting a second request (lines 80–111); the `finally` block clears it once the fetch settles. The same pattern is repeated in the sibling `refresh*Models.ts` files (e.g. `refreshGroqModels.ts`, `refreshBasetenModels.ts`, `refreshVercelAiGatewayModels.ts`).",
+    "turns": 5,
+    "cost": 0.218429,
+    "ms": 50486
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "result": "The deduplication of concurrent identical network requests is in:\n\n**`src/core/controller/models/refreshOpenRouterModels.ts`** — the module-level `pendingRefresh` promise guard inside `refreshOpenRouterModels()`.\n\n```ts\n// Track pending refresh promise to prevent duplicate concurrent fetches\nlet pendingRefresh: Promise<Record<string, ModelInfo>> | null = null\n\nexport async function refreshOpenRouterModels(controller) {\n    ...\n    if (pendingRefresh) {\n        return pendingRefresh   // returns the in-flight request instead of firing a second one\n    }\n    pendingRefresh = (async () => { ... finally: pendingRefresh = null })()\n    return pendingRefresh\n}\n```\n\nIf a refresh is already in flight, callers get back the existing promise rather than triggering a duplicate fetch.",
+    "turns": 4,
+    "cost": 0.15870700000000001,
+    "ms": 34525
+  },
+  {
+    "id": "C2",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "result": "**`cli/src/utils/openrouter-models.ts`** — function **`fetchOpenRouterModels()`**, via the module-level **`fetchPromise`** guard.\n\nIf a fetch is already in progress, concurrent callers return the same `fetchPromise` instead of starting a new request (lines 29–30); it's set before the network call and cleared in `finally` (line 52). The `cachedModels` variable handles dedup *after* completion, but the in-flight coalescing — stopping a second simultaneous fire — is `fetchPromise`.",
+    "turns": 6,
+    "cost": 0.41681,
+    "ms": 63441
+  },
+  {
+    "id": "C2",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "result": "The guard lives in **`src/services/banner/BannerService.ts`**, in the **`ensureFreshCache()`** method (with the `private fetchPromise: Promise<Banner[]> | null` field).\n\nIt coalesces concurrent fetches by checking `!this.fetchPromise` before starting a new one — while a fetch is in flight, `fetchPromise` is non-null, so any further call skips firing a second request. It's reset to `null` in the `.finally()` once the in-flight fetch settles:\n\n```ts\nconst shouldFetch =\n    now >= this.backoffUntil &&\n    now - this.lastFetchTime >= cacheDurationMs &&\n    !this.fetchPromise &&          // ← in-flight dedup guard\n    !this.authFetchPending\n\nif (shouldFetch) {\n    this.fetchPromise = this.doFetch()\n    this.fetchPromise.finally(() => { this.fetchPromise = null })\n}\n```",
+    "turns": 7,
+    "cost": 0.3242245,
+    "ms": 77189
+  },
+  {
+    "id": "C3",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "result": "The streamed assistant text is parsed into structured tool calls (tool blocks with parameters) here:\n\n**`src/core/assistant-message/parse-assistant-message.ts` → `parseAssistantMessageV2()`**\n\nIt scans the raw streamed string for `<tool_name>...</tool_name>` blocks and their `<param>` tags, emitting `AssistantMessageContent[]` (interleaved text and `ToolUse` objects) that the executor then acts on. (This is the XML-tool path; providers using OpenAI's Responses API use native tool calls instead.)",
+    "turns": 3,
+    "cost": 0.1796295,
+    "ms": 20896
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "result": "The codebase guards against this in a few spots using the same \"store the in-flight promise, return it if one already exists\" pattern. The clearest, most explicit one:\n\n**`src/services/auth/AuthService.ts`** — field `_refreshPromise` (`Promise<string | undefined> | null`). In `getAuthToken()` it checks `if (this._refreshPromise) { ... return await this._refreshPromise }` (\"Token refresh already in progress, waiting for completion\") before starting a new refresh, and `retrieveAuthInfo()` awaits the same promise. This coalesces concurrent token-refresh network calls into one.\n\nThe same coalescing pattern appears elsewhere if you meant a different request:\n- `src/core/controller/models/refreshClineRecommendedModels.ts` — module-level `pendingRefresh`, returned directly if non-null in `refreshClineRecommendedModels()`.\n- `src/services/banner/BannerService.ts` — `fetchPromise` guarded by `!this.fetchPromise` in `ensureFreshCache()`.\n- `src/services/auth/oca/OcaAuthService.ts` — `_refreshInFlight`.\n\nIf you have a specific request in mind (auth token, model list, banners), tell me which and I'll point to the exact guard.",
+    "turns": 9,
+    "cost": 0.3303145,
+    "ms": 79296
+  },
+  {
+    "id": "C2",
+    "cond": "B",
+    "trial": 2,
+    "correct": true,
+    "result": "The in-flight request dedup (preventing a second identical network call while one is already running) is the token-refresh concurrency guard.\n\n**Primary:** `src/services/auth/AuthService.ts` — in `internalGetAuthToken()`, the `_refreshPromise` field. If a refresh is already in progress, callers `await this._refreshPromise` instead of firing a second refresh; it's set to `null` in `finally`.\n\nThe same pattern also guards Codex token refresh: `src/integrations/openai-codex/oauth.ts` — `refreshPromise` (`if (!this.refreshPromise) { this.refreshPromise = refreshAccessToken(...) }`).",
+    "turns": 6,
+    "cost": 0.261595,
+    "ms": 81061
+  },
+  {
+    "id": "C3",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "result": "The XML-like streamed text is parsed into structured tool actions in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`**\n\nIt scans the raw assistant string for tool/param XML tags and emits an array of `AssistantMessageContent` (`TextStreamContent` | `ToolUse` | `ReasoningStreamContent`), marking unclosed trailing blocks as `partial`. It's re-exported from `src/core/assistant-message/index.ts`.\n\n(Note: this is the XML-tool path. Native/function-call tool outputs are handled separately by the API handlers rather than this text parser.)",
+    "turns": 3,
+    "cost": 0.126459,
+    "ms": 15698
+  },
+  {
+    "id": "C3",
+    "cond": "A",
+    "trial": 2,
+    "correct": true,
+    "result": "The streamed assistant text is parsed into structured tool actions by **`parseAssistantMessageV2`** in **`src/core/assistant-message/parse-assistant-message.ts`** (re-exported from `src/core/assistant-message/index.ts`).\n\nIt scans the raw model output for XML-like tool/parameter tags and builds an array of `ToolUse` objects (with `name` and `params`), marking unclosed blocks as `partial` for streaming.",
+    "turns": 3,
+    "cost": 0.1275255,
+    "ms": 12327
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "result": "This is the request-coalescing (single-flight) pattern you're describing.\n\n**File:** `src/services/auth/AuthService.ts`\n**Symbol:** `internalGetAuthToken()` — guarded by the `_refreshPromise` field\n\nWhen an auth-token refresh is needed, it stores the in-flight refresh in `this._refreshPromise`. Any concurrent caller that finds `_refreshPromise` already set just `await`s the existing promise instead of firing a second network refresh (line 166-170), and the field is reset to `null` in the `finally` block once the request completes.\n\nThe OCA auth service uses the same pattern via `_refreshInFlight` in `src/services/auth/oca/OcaAuthService.ts`.",
+    "turns": 7,
+    "cost": 0.24566249999999998,
+    "ms": 46345
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 0,
+    "correct": false,
+    "result": "The mechanism is in‑flight request coalescing via a module‑level `pendingRefresh` promise guard.\n\n**File:** `src/core/controller/models/refreshOpenRouterModels.ts`\n**Symbol:** the `pendingRefresh` promise in `refreshOpenRouterModels()` — if a fetch is already running it returns that same promise instead of starting a second one (lines 80–110).\n\nThe same pattern is repeated for the other model providers: `refreshBasetenModels.ts`, `refreshGroqModels.ts`, `refreshClineModels.ts`, and `refreshVercelAiGatewayModels.ts` (each with its own `pendingRefresh`).\n\nIf you meant a different network call, other places guard the same way: `BannerService.getActiveBanners()` (`this.fetchPromise` in `src/services/banner/BannerService.ts`) and `AuthService` token refresh (`this._refreshPromise`).",
+    "turns": 8,
+    "cost": 0.284133,
+    "ms": 73171
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "result": "**File:** `src/core/assistant-message/parse-assistant-message.ts` — function **`parseAssistantMessageV2`** (re-exported from `src/core/assistant-message/index.ts`).\n\nIt parses the model's raw streamed text, scanning for XML-like tool/param tags, into an array of structured `AssistantMessageContent` blocks (`TextStreamContent` / `ToolUse` / `ReasoningStreamContent`). The resulting `ToolUse` objects are what the rest of the system executes as tool actions.\n\n(Note: native tool calls — Responses API providers — bypass this XML parsing and arrive already structured.)",
+    "turns": 3,
+    "cost": 0.126835,
+    "ms": 15892
+  },
+  {
+    "id": "C2",
+    "cond": "C",
+    "trial": 2,
+    "correct": true,
+    "result": "The codebase guards against duplicate concurrent network requests in a few places, but the canonical \"don't fire the same request twice at once\" pattern is the **`pendingRefresh` module-level promise** in the model-refresh functions.\n\n**File / symbol:** `pendingRefresh` in `src/core/controller/models/refreshOpenRouterModels.ts:81` (and the function `refreshOpenRouterModels`, lines 95–98 return the in-flight promise instead of starting a new fetch).\n\nThe identical pattern is repeated in the sibling refreshers — `refreshClineModels.ts`, `refreshBasetenModels.ts`, `refreshGroqModels.ts`, `refreshHicapModels.ts`, and `refreshVercelAiGatewayModels.ts`.\n\nA related (token-refresh) variant is `OpenAiCodexOAuthManager.refreshPromise` in `src/integrations/openai-codex/oauth.ts:361` (\"De-dupe concurrent refreshes\").",
+    "turns": 8,
+    "cost": 0.3259365,
+    "ms": 62525
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "result": "The streamed text is parsed in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`** (re-exported from `src/core/assistant-message/index.ts`).\n\nIt incrementally scans the model's raw streamed output and turns it into structured `AssistantMessageContent[]` — `TextStreamContent`, `ReasoningStreamContent`, and `ToolUse` blocks (each `ToolUse` carrying the tool `name` and parsed `params`), which then drive execution downstream.\n\n(Note: this is the XML-style tool parser; providers using native tool calls produce `ToolUse` objects directly with `isNativeToolCall: true` rather than going through this text parser.)",
+    "turns": 2,
+    "cost": 0.09654100000000002,
+    "ms": 11589
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "result": "For XML-style tool calls, the parsing happens in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`**\n\nThis is the streaming parser that scans the model's accumulated text output and segments it into `AssistantMessageContent[]` — `TextStreamContent`, `ReasoningStreamContent`, and `ToolUse` blocks (the structured tool actions, with `name` and `params`). It's re-exported from `src/core/assistant-message/index.ts`.\n\n(Native/Responses-API tool calls bypass this XML parser and arrive as structured `ToolUse` objects directly with `isNativeToolCall: true`.)",
+    "turns": 3,
+    "cost": 0.11809549999999999,
+    "ms": 21393
+  },
+  {
+    "id": "C3",
+    "cond": "B",
+    "trial": 2,
+    "correct": true,
+    "result": "The streamed assistant text is parsed into structured tool actions in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`**\n\nIt scans the raw model output for XML-like tags, building an array of `AssistantMessageContent` objects (`TextContent` and `ToolUse` blocks, with `partial: true` for blocks still streaming). The types it produces are defined in `src/core/assistant-message/index.ts`.\n\nNote this is the XML-tool path; providers using OpenAI's Responses API use native tool calling instead of this parser.",
+    "turns": 3,
+    "cost": 0.117071,
+    "ms": 23279
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "result": "The streamed assistant text is parsed into structured tool actions in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`**\n\nIt scans the raw streamed string for XML-like tags (`<tool_name>`, `<param>`) and produces an array of `AssistantMessageContent` blocks (`TextContent` / `ToolUse` with `params`), marking incomplete blocks as `partial` for streaming.\n\n(Note: this is the XML-tool path. Providers using OpenAI's Responses API use native tool calling instead, where tool calls arrive pre-structured rather than being parsed from text.)",
+    "turns": 3,
+    "cost": 0.14418199999999998,
+    "ms": 23199
+  },
+  {
+    "id": "C3",
+    "cond": "C",
+    "trial": 2,
+    "correct": true,
+    "result": "The streamed assistant text is parsed into structured tool actions in:\n\n**`src/core/assistant-message/parse-assistant-message.ts`** — function **`parseAssistantMessageV2`**\n\nIt scans the raw model output for XML-like tags, emitting an array of `AssistantMessageContent` blocks (`text` and `tool_use`), extracting tool names and their parameters, and marking blocks `partial` when the stream ends mid-tag. (This handles XML-style tools; providers using native tool calling bypass this path.)",
+    "turns": 3,
+    "cost": 0.1433515,
+    "ms": 22592
+  },
+  {
+    "id": "C4",
+    "cond": "A",
+    "trial": 1,
+    "correct": true,
+    "result": "The chunk-streaming loop checks for interruption after each chunk, so a long-running API request gets broken out partway through there.\n\n**`src/core/task/index.ts`** — inside the `attemptApiRequest`/stream-consuming loop, at the `while (true)` over `streamCoordinator.nextChunk()`. After processing each chunk it checks `this.taskState.abort` (line ~2961), calls `this.api.abort?.()` + `abortStream(\"user_cancelled\")`, and `break`s out of the stream (`shouldInterruptStream = true`). Related break-points in the same loop: `this.taskState.didRejectTool` (tool rejection, ~2971) and the parallel-tool-disabled interrupt just below.\n\nThe abort flag itself is set by `abortTask()` (line ~1534) in the same file.",
+    "turns": 3,
+    "cost": 0.2457565,
+    "ms": 24067
+  },
+  {
+    "id": "C4",
+    "cond": "A",
+    "trial": 0,
+    "correct": true,
+    "result": "**`src/core/task/index.ts` → `recursivelyMakeClineRequests()`** (the `while (true)` stream-consumption loop, around line 2961).\n\nAs each chunk arrives from the model stream, the loop checks `this.taskState.abort`; when set, it calls `this.api.abort?.()`, runs `abortStream(\"user_cancelled\")`, and `break`s out — interrupting the in-flight request mid-stream. The stream itself comes from `attemptApiRequest()` (line 1865), and the abort flag is flipped by `abortTask()` (line 1534).\n\nThe loop also breaks early for non-cancellation reasons in the same spot: `didRejectTool` (user feedback interrupts the response) and the parallel-tool-calling guard just below.",
+    "turns": 5,
+    "cost": 0.3056725,
+    "ms": 35438
+  },
+  {
+    "id": "C4",
+    "cond": "A",
+    "trial": 2,
+    "correct": true,
+    "result": "A long-running API request (the streaming LLM response) is interrupted partway through in:\n\n**`src/core/task/index.ts` → `recursivelyMakeClineRequests()`**\n\nSpecifically inside the `for await (const chunk of stream)` loop (stream comes from `attemptApiRequest`). After each chunk it checks `this.taskState.abort`; when set, it calls `this.api.abort?.()`, runs the local `abortStream(\"user_cancelled\")`, and `break`s out of the stream mid-response (`src/core/task/index.ts:2961`).\n\nThe abort flag itself is flipped by `abortTask()` (same file, `src/core/task/index.ts:1534`), which is what makes the running stream stop at the next chunk boundary.",
+    "turns": 6,
+    "cost": 0.21722349999999999,
+    "ms": 32981
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 0,
+    "correct": true,
+    "result": "The long-running request — the streaming API response — can be interrupted partway through inside its chunk-consumption loop.\n\n**File:** `src/core/task/index.ts`\n**Function:** `recursivelyMakeClineRequests` (line 2354)\n\nThe interruption happens in the `while (true)` stream-reading loop (starting line 2858). After each chunk is processed, the loop checks three break conditions:\n\n- **User cancellation** (`index.ts:2961`): `if (this.taskState.abort)` → calls `this.api.abort?.()`, runs `abortStream(\"user_cancelled\")`, and breaks.\n- **Tool rejection** (`index.ts:2971`): `if (this.taskState.didRejectTool)` → appends `[Response interrupted by user feedback]` and breaks.\n- **Single-tool-use interrupt** (`index.ts:2982`): when parallel tool calling is disabled and a tool was already used, appends `[Response interrupted by a tool use result...]` and breaks.\n\nWhen any fire, `shouldInterruptStream` is set and `streamCoordinator.stop()` (line 2991) tears down the in-flight stream instead of letting it complete.",
+    "turns": 5,
+    "cost": 0.28388349999999996,
+    "ms": 32668
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 2,
+    "correct": true,
+    "result": "The streaming consumption loop lives in `recursivelyMakeClineRequests`, and the per-chunk abort check is the interruption point.\n\n**File:** `src/core/task/index.ts`\n**Function:** `recursivelyMakeClineRequests` — inside its `for await (const chunk of stream)` loop, the abort check at **lines 2961–2969**:\n\n```ts\nif (this.taskState.abort) {\n    this.api.abort?.()\n    if (!this.taskState.abandoned) {\n        await abortStream(\"user_cancelled\")\n    }\n    shouldInterruptStream = true\n    break // aborts the stream\n}\n```\n\nAfter each chunk from `attemptApiRequest`, the loop checks `this.taskState.abort`; if set, it calls `this.api.abort?.()` and the local `abortStream(...)` helper, then breaks out — interrupting the long-running API request partway through. (Two adjacent checks at lines 2971 and 2982 similarly break the loop early on tool rejection / single-tool-use, via `shouldInterruptStream`.)",
+    "turns": 7,
+    "cost": 0.25552,
+    "ms": 42032
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "result": "The interruption point is the streaming loop inside `src/core/task/index.ts`, in the `recursivelyMakeClineRequests` method (the `while (true)` loop over `streamCoordinator.nextChunk()`, starting ~line 2858).\n\nMid-stream, after each chunk it checks three conditions and sets `shouldInterruptStream = true` to break out and call `streamCoordinator.stop()`:\n\n- **`this.taskState.abort`** (user cancelled) — line 2961, also calls `this.api.abort?.()` and `abortStream(\"user_cancelled\")`\n- **`this.taskState.didRejectTool`** (user rejected a tool) — line 2971\n- **`!isParallelToolCallingEnabled() && this.taskState.didAlreadyUseTool`** (one tool per message) — line 2982\n\nSo: **`src/core/task/index.ts` → `recursivelyMakeClineRequests` (the chunk loop driven by `shouldInterruptStream`).**",
+    "turns": 4,
+    "cost": 0.1796985,
+    "ms": 31354
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 2,
+    "correct": true,
+    "result": "The long-running request (the LLM API stream) is interrupted inside the streaming loop of `recursivelyMakeClineRequests`.\n\n**File:** `src/core/task/index.ts`\n**Function/symbol:** `Task.recursivelyMakeClineRequests` — specifically the `for await (...)` loop over the API stream, where each chunk checks `this.taskState.abort` (around `index.ts:2961`) and, if set, calls `this.api.abort?.()` + `abortStream(\"user_cancelled\")` and `break`s out of the stream.\n\nThe abort flag itself is flipped by `Task.abortTask()` (`index.ts:1534`, sets `this.taskState.abort = true`), and the per-chunk check is what lets a long-running request stop partway through.",
+    "turns": 6,
+    "cost": 0.22725250000000002,
+    "ms": 27908
+  },
+  {
+    "id": "C4",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "result": "The long-running streaming API request is interrupted in:\n\n**`src/core/task/index.ts` — `recursivelyMakeClineRequests()`**\n\nInside the `while (true)` chunk-consumption loop (`streamCoordinator.nextChunk()`), each iteration checks the abort flag at **line 2961**:\n\n```ts\nif (this.taskState.abort) {\n    this.api.abort?.()\n    if (!this.taskState.abandoned) {\n        await abortStream(\"user_cancelled\")   // graceful abort\n    }\n    shouldInterruptStream = true\n    break  // aborts the stream\n}\n```\n\nSo the interruption point is between chunks of the streamed response — the loop checks `this.taskState.abort` (set by `abortTask()`, line 1534) after processing each chunk and bails out via `this.api.abort()` + the local `abortStream` helper (defined at line 2723). There's also a sibling check for tool rejection (`didRejectTool`, line 2971) that interrupts the response mid-stream with `[Response interrupted by user feedback]`.",
+    "turns": 10,
+    "cost": 0.3087515,
+    "ms": 70522
+  },
+  {
+    "id": "C4",
+    "cond": "C",
+    "trial": 1,
+    "correct": true,
+    "result": "A long-running streaming request is interrupted in:\n\n**File:** `src/core/task/index.ts`\n**Function/symbol:** `recursivelyMakeClineRequests()` — inside its chunk-consumption `while (true)` loop, the abort check at ~line 2961:\n\n```typescript\nif (this.taskState.abort) {\n    this.api.abort?.()\n    if (!this.taskState.abandoned) {\n        await abortStream(\"user_cancelled\")\n    }\n    shouldInterruptStream = true\n    break\n}\n```\n\nThis is the primary cut point: between consuming stream chunks, it checks `taskState.abort` (set by `abortTask()`), signals the API handler via `this.api.abort?.()`, saves the partial response with `abortStream(\"user_cancelled\")`, and breaks out — interrupting the request partway through.",
+    "turns": 2,
+    "cost": 0.253988,
+    "ms": 93770
+  },
+  {
+    "id": "C5",
+    "cond": "A",
+    "trial": 1,
+    "correct": false,
+    "result": "The code that strips internal/private fields from messages before they go out to an LLM provider lives here:\n\n**`src/shared/messages/content.ts`** — `convertClineStorageToAnthropicMessage()` (with its helper `cleanContentBlock()`)\n\nThese convert a stored `ClineStorageMessage` into a plain `Anthropic.MessageParam`, removing Cline-internal/private fields (`modelInfo`, `reasoning_details`, `call_id`, `summary`, and Gemini-only `signature`) and dropping invalid thinking blocks. The intent is documented right on the type:\n\n```ts\n// src/shared/messages/content.ts:90-95\n/**\n * NOTE: model information used when generating this message.\n * Internal use for message conversion only.\n * MUST be removed before sending message to any LLM provider.\n */\nmodelInfo?: ClineMessageModelInfo\n```\n\nNote `reasoning_details` are kept only for providers in `REASONING_DETAILS_PROVIDERS` (`[\"cline\", \"openrouter\"]`) and stripped for everyone else.",
+    "turns": 10,
+    "cost": 0.32482449999999996,
+    "ms": 71337
+  },
+  {
+    "id": "C5",
+    "cond": "A",
+    "trial": 0,
+    "correct": false,
+    "result": "`src/shared/messages/content.ts` — the function **`convertClineStorageToAnthropicMessage()`** (with its helper **`cleanContentBlock()`**).\n\nIt strips Cline-internal/private fields (e.g. `modelInfo`, `metrics`, `reasoning_details`) and invalid thinking blocks off each stored message when converting `ClineStorageMessage` → Anthropic `MessageParam`. The intent is stated directly at `content.ts:90-93`: *\"Internal use for message conversion only. MUST be removed before sending message to any LLM provider.\"*\n\n(Note: there are also provider-specific strippers, e.g. `stripThinkingTags` in `src/core/api/providers/cerebras.ts:71`, which removes `<think>…</think>` from history for reasoning models — but the central, all-provider stripping happens in `content.ts`.)",
+    "turns": 14,
+    "cost": 0.6122055000000001,
+    "ms": 127482
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 0,
+    "correct": false,
+    "result": "**`src/shared/messages/content.ts`** — `convertClineStorageToAnthropicMessage()`, with its helper `cleanContentBlock()`.\n\nThese strip Cline-internal/private fields off each stored message right before it's handed to an LLM provider. `cleanContentBlock()` removes `reasoning_details`, `call_id`, `summary`, and the Gemini-only `signature`; `convertClineStorageToAnthropicMessage()` also drops `modelInfo`/`metrics` and filters out invalid (signature-less) thinking blocks. The intent is documented inline on `ClineStorageMessage.modelInfo` (line 93): *\"MUST be removed before sending message to any LLM provider.\"*\n\n(Separately, `src/core/task/index.ts` in `presentAssistantMessage` strips `<thinking>`/`<think>`/`<function_calls>` tags — but that's for hiding content in the chat UI, not for outbound API requests.)",
+    "turns": 15,
+    "cost": 0.6299204999999999,
+    "ms": 135141
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 1,
+    "correct": false,
+    "result": "**`src/shared/messages/content.ts`** — `convertClineStorageToAnthropicMessage()`, which delegates to **`cleanContentBlock()`**.\n\n`cleanContentBlock()` strips the Cline-internal/private fields (`reasoning_details`, `call_id`, `summary`, and the Gemini-only `signature`) off each content block, and `convertClineStorageToAnthropicMessage()` also drops the message-level `modelInfo`/`metrics` and filters out signature-less thinking blocks — so only Anthropic-compatible content goes out to the LLM provider. The intent is spelled out in the `ClineStorageMessage.modelInfo` doc comment: *\"MUST be removed before sending message to any LLM provider.\"*\n\n(If you instead meant image-stripping for Claude Code, that's `filterMessagesForClaudeCode()` in `src/integrations/claude-code/message-filter.ts` — but that hides images, not private fields.)",
+    "turns": 6,
+    "cost": 0.2850175,
+    "ms": 45480
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 2,
+    "correct": true,
+    "result": "**File:** `src/shared/messages/content.ts`\n\n**Function/symbol:** `convertClineStorageToAnthropicMessage()` (and its helper `cleanContentBlock()`)\n\nThis is where Cline strips its internal/private message fields before sending to an LLM provider. The `ClineStorageMessage` type carries Cline-only metadata (`modelInfo`, `metrics`, `ts`, plus per-block `reasoning_details`, `call_id`, `summary`, and Gemini `signature`) — the comment on `modelInfo` (line 92–94) notes it \"MUST be removed before sending message to any LLM provider.\"\n\n- `convertClineStorageToAnthropicMessage()` drops those fields and also filters out invalid `thinking` blocks lacking a signature.\n- `cleanContentBlock()` does the per-block removal of the Cline-specific keys.\n\nNote: this strips Cline's internal bookkeeping, not user-secret redaction. If you instead meant `.clineignore` file-content gating, that lives in `src/core/ignore/ClineIgnoreController.ts` — let me know which sense of \"private\" you're after.",
+    "turns": 10,
+    "cost": 0.368719,
+    "ms": 85594
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 0,
+    "correct": true,
+    "result": "`src/shared/messages/content.ts` — the function **`convertClineStorageToAnthropicMessage`**, with its helper **`cleanContentBlock`**.\n\nThese strip Cline-internal/private fields from each stored message before it's sent to an LLM provider — `modelInfo` (explicitly flagged at `content.ts:90-93`: \"MUST be removed before sending message to any LLM provider\"), plus `reasoning_details`, `call_id`, `summary`, Gemini-only `signature`s, and invalid (unsigned) thinking blocks. It's invoked from `sanitizeAnthropicMessages` in `src/core/api/transform/anthropic-format.ts` on the way out.",
+    "turns": 14,
+    "cost": 0.5456620000000001,
+    "ms": 107832
+  },
+  {
+    "id": "C5",
+    "cond": "C",
+    "trial": 2,
+    "correct": false,
+    "result": "**File:** `src/shared/messages/content.ts`\n\n**Function:** `convertClineStorageToAnthropicMessage()` (with its helper `cleanContentBlock()`)\n\nThis is where Cline strips its internal/\"private\" fields from stored messages before they go to an LLM provider. The `ClineStorageMessage` type carries Cline-only metadata — `modelInfo` (commented `MUST be removed before sending message to any LLM provider`), `metrics`, `ts`, plus per-block fields like `reasoning_details`, `call_id`, `summary`, and the Gemini-only `signature`. `convertClineStorageToAnthropicMessage` filters out invalid thinking blocks (no signature) and maps each block through `cleanContentBlock`, which deletes those extra fields so only Anthropic-compatible content is sent (skipped for providers in `REASONING_DETAILS_PROVIDERS`).",
+    "turns": 19,
+    "cost": 0.6853115,
+    "ms": 142115
+  },
+  {
+    "id": "C5",
+    "cond": "B",
+    "trial": 1,
+    "correct": true,
+    "result": "**`src/shared/messages/content.ts` → `convertClineStorageToAnthropicMessage()`** (with its helper `cleanContentBlock()`).\n\nIt takes Cline's internal `ClineStorageMessage` and strips the Cline-only/private fields before the message goes to the API — keeping only `{ role, content }` (dropping `modelInfo`, `metrics`, `id`, `ts`) and removing per-block fields like `reasoning_details`, `call_id`, `summary`, and stray `signature`. It also drops invalid thinking blocks (no signature).\n\nIt's invoked via `sanitizeAnthropicMessages()` in `src/core/api/transform/anthropic-format.ts`, which runs before each request for Anthropic-format providers.\n\nNote: there's no `<private>`-tag redaction of user text — \"private\" here means Cline-internal metadata, not user-marked secrets.",
+    "turns": 16,
+    "cost": 0.7507600000000001,
+    "ms": 282818
+  },
+  {
+    "id": "C5",
+    "cond": "A",
+    "trial": 2,
+    "correct": true,
+    "result": "Confirmed.\n\n## Answer\n\n**File:** `src/shared/messages/content.ts`\n**Function:** `cleanContentBlock()` (and its caller `convertClineStorageToAnthropicMessage()`)\n\n`cleanContentBlock()` (`src/shared/messages/content.ts:137`) strips Cline-internal/\"private\" fields off each message content block — `reasoning_details`, `call_id`, `summary`, and the Gemini-only `signature` on non-thinking blocks — returning only Anthropic-API-compatible fields.\n\nIt's invoked by `convertClineStorageToAnthropicMessage()` (`content.ts:111`), which converts stored messages to the outbound API format right before they're sent to the LLM — dropping internal fields and also filtering out invalid (unsigned) thinking blocks. That converter is driven in batch by `sanitizeAnthropicMessages()` in `src/core/api/transform/anthropic-format.ts:14`, used by the Anthropic/Vertex/AIHubmix/OCA provider paths.\n\nNote: this strips Cline's *internal bookkeeping* fields, not user-authored \"secret\" text. If by \"private content\" you meant something else (e.g., redacting secrets/API keys for telemetry, or hiding content in the webview), let me know and I'll point you to that path instead.",
+    "turns": 18,
+    "cost": 0.7712186000000002,
+    "ms": 303701
+  }
+]

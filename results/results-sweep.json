@@ -1,0 +1,272 @@
+[
+  {
+    "cond": "native",
+    "scen": "N1_known",
+    "logical": 203120,
+    "mcp": 0,
+    "shell": 6,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "native",
+    "scen": "N1_known",
+    "logical": 106122,
+    "mcp": 0,
+    "shell": 5,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "native",
+    "scen": "N1_known",
+    "logical": 128123,
+    "mcp": 0,
+    "shell": 5,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "native",
+    "scen": "N3_known",
+    "logical": 114498,
+    "mcp": 0,
+    "shell": 2,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "native",
+    "scen": "N3_known",
+    "logical": 121584,
+    "mcp": 0,
+    "shell": 3,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "native",
+    "scen": "N3_known",
+    "logical": 115646,
+    "mcp": 0,
+    "shell": 3,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "native",
+    "scen": "N6_known",
+    "logical": 94067,
+    "mcp": 0,
+    "shell": 5,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "native",
+    "scen": "N6_known",
+    "logical": 91684,
+    "mcp": 0,
+    "shell": 2,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "native",
+    "scen": "N6_known",
+    "logical": 92529,
+    "mcp": 0,
+    "shell": 2,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "native",
+    "scen": "N12_known",
+    "logical": 94579,
+    "mcp": 0,
+    "shell": 3,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "native",
+    "scen": "N12_known",
+    "logical": 95719,
+    "mcp": 0,
+    "shell": 4,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "native",
+    "scen": "N12_known",
+    "logical": 131552,
+    "mcp": 0,
+    "shell": 4,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "native",
+    "scen": "UNKNOWN_search",
+    "logical": 159531,
+    "mcp": 0,
+    "shell": 5,
+    "covered": 4,
+    "total": 4
+  },
+  {
+    "cond": "native",
+    "scen": "UNKNOWN_search",
+    "logical": 160384,
+    "mcp": 0,
+    "shell": 4,
+    "covered": 4,
+    "total": 4
+  },
+  {
+    "cond": "native",
+    "scen": "UNKNOWN_search",
+    "logical": 158817,
+    "mcp": 0,
+    "shell": 3,
+    "covered": 4,
+    "total": 4
+  },
+  {
+    "cond": "codemap",
+    "scen": "N1_known",
+    "logical": 92852,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "codemap",
+    "scen": "N1_known",
+    "logical": 93013,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "codemap",
+    "scen": "N1_known",
+    "logical": 93253,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 1,
+    "total": 1
+  },
+  {
+    "cond": "codemap",
+    "scen": "N3_known",
+    "logical": 92268,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "codemap",
+    "scen": "N3_known",
+    "logical": 92035,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "codemap",
+    "scen": "N3_known",
+    "logical": 91972,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 3,
+    "total": 3
+  },
+  {
+    "cond": "codemap",
+    "scen": "N6_known",
+    "logical": 94582,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "codemap",
+    "scen": "N6_known",
+    "logical": 94596,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "codemap",
+    "scen": "N6_known",
+    "logical": 94609,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 6,
+    "total": 6
+  },
+  {
+    "cond": "codemap",
+    "scen": "N12_known",
+    "logical": 97850,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "codemap",
+    "scen": "N12_known",
+    "logical": 98125,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "codemap",
+    "scen": "N12_known",
+    "logical": 98406,
+    "mcp": 2,
+    "shell": 0,
+    "covered": 12,
+    "total": 12
+  },
+  {
+    "cond": "codemap",
+    "scen": "UNKNOWN_search",
+    "logical": 92387,
+    "mcp": 1,
+    "shell": 1,
+    "covered": 4,
+    "total": 4
+  },
+  {
+    "cond": "codemap",
+    "scen": "UNKNOWN_search",
+    "logical": 106634,
+    "mcp": 1,
+    "shell": 1,
+    "covered": 4,
+    "total": 4
+  },
+  {
+    "cond": "codemap",
+    "scen": "UNKNOWN_search",
+    "logical": 106431,
+    "mcp": 1,
+    "shell": 1,
+    "covered": 4,
+    "total": 4
+  }
+]

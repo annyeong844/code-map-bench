@@ -1,0 +1,62 @@
+[
+  {
+    "cond": "A_native",
+    "logical": 132326,
+    "cached": 122880,
+    "realWork": 9446,
+    "nonCached": 7094,
+    "out": 2352,
+    "cmds": 10,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61689,
+    "cached": 34560,
+    "realWork": 27129,
+    "nonCached": 26151,
+    "out": 978,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 96455,
+    "cached": 39552,
+    "realWork": 56903,
+    "nonCached": 54607,
+    "out": 2296,
+    "cmds": 8,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61581,
+    "cached": 59136,
+    "realWork": 2445,
+    "nonCached": 1576,
+    "out": 869,
+    "cmds": 1,
+    "covered": 6
+  },
+  {
+    "cond": "A_native",
+    "logical": 96094,
+    "cached": 89216,
+    "realWork": 6878,
+    "nonCached": 4417,
+    "out": 2461,
+    "cmds": 7,
+    "covered": 6
+  },
+  {
+    "cond": "B_codemap",
+    "logical": 61697,
+    "cached": 59136,
+    "realWork": 2561,
+    "nonCached": 1593,
+    "out": 968,
+    "cmds": 1,
+    "covered": 6
+  }
+]
