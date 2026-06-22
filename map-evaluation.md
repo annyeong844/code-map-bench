@@ -7,6 +7,8 @@ code-oracle (separate optional MCP) was **reachable**: `tsgo` warmed on first ca
 
 All measurements are end-to-end (prereq discovery + the call + any verification). Every section ends with a verdict.
 
+> **Update (2026-06-22):** the code-oracle name-targeting footgun reported in §3 (Task 4) and §5 — `name` resolving to the first textual occurrence, which could anchor on a comment and return 0 callers — was fixed in `map@5f4bc9d`: `name` now resolves to the declaration via the LSP's `documentSymbol` (comments/strings/imports skipped). Re-verified `callers(read.ts, name:"read")` 0 → 16. The finding below is preserved as it was observed at eval time.
+
 ---
 
 ## 1. Headline
