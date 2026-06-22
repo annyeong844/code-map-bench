@@ -20,7 +20,21 @@ After the hook experiment, the same flaw was found in the MCP server's own `inst
 
 **Implication:** the simplest possible fix — one correct sentence in the always-on, stateless, cross-host tool surface — **outperformed the stateful, Claude-Code-only hook**. The hook is now belt-and-suspenders insurance for *untested* very-long / very-large sessions where even tool instructions might dilute; it is not the load-bearing piece.
 
-**Caveats:** 15 turns, one small repo (187 symbols), Claude Code, n=3. Long (50+ turn) / large-context sessions and other hosts are untested — that is exactly where a re-injection hook could still earn its place.
+**Caveats:** 15 turns, one small repo (187 symbols), Claude Code, n=3. (Longer/larger sessions and a weaker model are tested in Update 2.)
+
+## Update 2 (2026-06-22): where it DOES break is model capability — and the hook rescues it
+
+The caveat above was tested directly. On a **capable model (Opus)** the corrected instruction is impervious — grep-first stayed **0%** across every regime: uniform 60 turns, mixed 40 turns (interleaved with 20 legitimate grep turns building a live grep-habit), a context-burial run (all source dumped into context), and **mixed 100 turns**. No length, grep-habit, or context-volume regime induced any dilution. So it does **not** decay over a session on a capable model.
+
+It breaks on **model capability**, not session length. Repeating the mixed-40 regime on a weak model (Claude Haiku):
+
+| model · config | cm:read on read-turns | behavior |
+|---|---|---|
+| Opus, instruction only | 100% | follows routing |
+| **Haiku, instruction only** | **0/20** | bypasses code-map entirely — grep + native `Read`, or answers from earlier reads; ignores the instruction from turn 1 (flat, not decay) |
+| **Haiku, instruction + hook** | **20/20** | rescued — the hook fires on turn 1's grep, re-injects "use read", and Haiku switches to read wholesale (grep and native-Read both drop to ~0) |
+
+**This is where the second layer earns its place.** The static instruction is high-salience enough to hold a capable model indefinitely, but a weak model disregards it; the PreToolUse hook's re-injection — delivered at the moment of the offending grep — forces compliance even from a model that ignores the static rule. The two are complementary: the **instruction** is the stateless, cross-host baseline that suffices for capable models; the **hook** is the stateful (Claude-Code-only) safety net that recovers weak models. Keep both ("a fox has two dens").
 
 ## Arms
 - **A** — no hook (code-map MCP routing instructions only).
