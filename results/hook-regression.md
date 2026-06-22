@@ -1,0 +1,38 @@
+# Does a loaded routing rule decay over a session, and can a PreToolUse hook stop it?
+
+- generatedAt: 2026-06-22
+- driver: headless `claude -p --input-format stream-json --output-format stream-json` (Claude Code 2.1.x), **one growing session per run** so the code-map MCP routing instructions are injected ONCE and context accumulates — a genuine attention-dilution condition. (`--resume` would respawn the MCP and re-inject the rule every turn, which would invalidate the test.)
+- target repo: a small indexed TS repo (~187 symbols). code-map MCP `read` available; native `Read` left enabled (realistic). Tools auto-allowed are read-only (grep/cat/sed/… + Grep + `read`).
+- task per turn: "Show the implementation of the function `<name>` and explain in one sentence" — **name only, no file path**, so the agent must decide between grep-to-locate and `read`-by-name (which resolves a bare name directly).
+- per-turn classification: did the turn use code-map `read`? did it use a shell read/scan (grep / Grep / cat) **first** for a name it already knows = the "grep-first double-call" the routing is meant to remove.
+
+## Arms
+- **A** — no hook (code-map MCP routing instructions only).
+- **B** — original PreToolUse guard hook.
+- **B2** — guard hook after retargeting its message.
+
+## Results
+
+**code-map `read` adherence: 100% in every arm, every turn.** The catastrophic "abandon `read`, go back to grep" regression did NOT reproduce in 15 controlled turns — the agent always read the body with `read`. What varied was the **redundant grep-first double-call** (grepping to locate a name `read` would have resolved directly).
+
+| arm | grep-first turns | notes |
+|---|---|---|
+| **A** (no hook), n=3 | **26/45 (58%)** | present from turn 1, recurs all session — 100% of runs grep on turns 1,4,8,11,13,15 |
+| **B** (original hook), n=1 | **9/15 (60%)** | **no reduction** — see below |
+| **B2** (retargeted hook), n=3 | **3/45 (7%)** | all 3 are turn 1 (pre-nudge); turns 2–15 = **0% across all runs** |
+
+Control (separate run): with the file path GIVEN and native `Read` disabled, arm A was **15/15 clean `read`, 0 grep** — adherence ceiling when no discovery is needed and there is no escape hatch.
+
+## Why the original hook did nothing
+The original discovery message said *"using grep to DISCOVER names/lines is correct; just don't grep/cat the body on top."* The agent's actual pattern — grep the name, then `read` the body — is exactly what that message **permits**. So the hook fired (verified: it writes a per-session state file) but endorsed the very double-call it was meant to remove.
+
+Retargeted message: *"code-map `read` resolves a bare name / `path#name` directly — if you ALREADY KNOW the symbol, skip the grep; grep only to discover a name you don't know yet."* One turn-1 nudge then suppressed grep-first for the rest of the session (58% → 7%, n=3).
+
+## Takeaways
+- A PreToolUse re-injection hook **can** hold a routing rule that a loaded skill/instruction lets slip — but **only if its message targets the actual behavior**. A mis-targeted re-injection is a no-op; you have to measure that the message moves the behavior, not just that the hook fires.
+- In this controlled setup the failure mode was a *redundant* grep-first double-call, not read-abandonment; `read` itself was used 100% of the time. Catastrophic abandonment may need longer sessions / larger context / other hosts and was not observed here.
+- The hook is **Claude Code only** (PreToolUse contract). Other hosts fall back to the skill/rules, which this experiment shows can be permissive.
+
+## Method notes / limits
+- n=3 per arm for A and B2 (B is n=1, shown only to demonstrate the message defect). Single small repo, 15 turns. `read` deferred behind a tool-search step in this environment (constant across arms).
+- Driver and per-turn classifier were custom; classification is by tool-call *attempt* (a grep counts even if it would resolve to the same place), which is the routing signal of interest.
