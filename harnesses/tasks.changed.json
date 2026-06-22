@@ -1,0 +1,72 @@
+{
+  "name": "code-map changed-refresh adoption",
+  "description": "Multi-turn establish -> mutate -> refresh. Each task reads a working set of multi-line functions; the harness drifts two of them by inserting a unique marker comment inside the body (the signature/anchor line is preserved, so changedOnly re-anchors and returns the fresh slice). The scored refresh turn must report the markers. The map-changed arm should refresh via one read({refs, changedOnly:true}); the native arm re-reads/re-greps. Adoption signal: mcpChangedReadCallCount on the refresh turn. requiredSubstrings are the POST-edit markers, so a stale (un-refreshed) answer fails.",
+  "tasks": [
+    {
+      "id": "refresh-markers-a",
+      "kind": "refresh",
+      "category": "changed-refresh",
+      "scenario": "changed-refresh-body",
+      "workingSet": [
+        "src/core/util.ts#token",
+        "src/core/store.ts#loadIndex",
+        "src/mcp/server.ts#findUp",
+        "src/core/read.ts#read",
+        "src/core/fan-in.ts#resolveRelative",
+        "src/core/locate.ts#queryTerms",
+        "src/core/build-index.ts#readAll",
+        "src/cli/main.ts#parseArgs"
+      ],
+      "mutate": [
+        {
+          "file": "src/core/util.ts",
+          "find": "export function token(text: string): string {",
+          "replace": "export function token(text: string): string {\n  /* refresh-marker: RFRSH-TOKEN-7f3a91 */"
+        },
+        {
+          "file": "src/core/store.ts",
+          "find": "export function loadIndex(path = DEFAULT_INDEX_PATH): MapIndex {",
+          "replace": "export function loadIndex(path = DEFAULT_INDEX_PATH): MapIndex {\n  /* refresh-marker: RFRSH-LOADIDX-22b8c4 */"
+        }
+      ],
+      "prompt": "Two of the working-set functions changed: a unique marker comment was inserted into the body of each. Report the EXACT marker string now inside src/core/util.ts#token and the one inside src/core/store.ts#loadIndex, and list which working-set symbols are unchanged.",
+      "expected": {
+        "requiredSubstrings": ["RFRSH-TOKEN-7f3a91", "RFRSH-LOADIDX-22b8c4"],
+        "requiredRegex": ["unchanged"]
+      }
+    },
+    {
+      "id": "refresh-markers-b",
+      "kind": "refresh",
+      "category": "changed-refresh",
+      "scenario": "changed-refresh-body",
+      "workingSet": [
+        "src/mcp/server.ts#findUp",
+        "src/core/read.ts#read",
+        "src/core/build-index.ts#statAll",
+        "src/core/store.ts#saveIndex",
+        "src/core/util.ts#token",
+        "src/core/locate.ts#queryTerms",
+        "src/core/fan-in.ts#resolveRelative",
+        "src/cli/main.ts#parseArgs"
+      ],
+      "mutate": [
+        {
+          "file": "src/mcp/server.ts",
+          "find": "function findUp(name: string, start: string): string | null {",
+          "replace": "function findUp(name: string, start: string): string | null {\n  /* refresh-marker: RFRSH-FINDUP-9c5e0d */"
+        },
+        {
+          "file": "src/core/read.ts",
+          "find": "export function read(index: MapIndex, ref: string, opts: { snippet?: string } = {}): ReadResult {",
+          "replace": "export function read(index: MapIndex, ref: string, opts: { snippet?: string } = {}): ReadResult {\n  /* refresh-marker: RFRSH-READ-4d2f8a */"
+        }
+      ],
+      "prompt": "Two of the working-set functions changed: a unique marker comment was inserted into the body of each. Report the EXACT marker string now inside src/mcp/server.ts#findUp and the one inside src/core/read.ts#read, and list which working-set symbols are unchanged.",
+      "expected": {
+        "requiredSubstrings": ["RFRSH-FINDUP-9c5e0d", "RFRSH-READ-4d2f8a"],
+        "requiredRegex": ["unchanged"]
+      }
+    }
+  ]
+}
