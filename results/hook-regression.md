@@ -6,6 +6,22 @@
 - task per turn: "Show the implementation of the function `<name>` and explain in one sentence" — **name only, no file path**, so the agent must decide between grep-to-locate and `read`-by-name (which resolves a bare name directly).
 - per-turn classification: did the turn use code-map `read`? did it use a shell read/scan (grep / Grep / cat) **first** for a name it already knows = the "grep-first double-call" the routing is meant to remove.
 
+## Update (2026-06-22, decisive): the fix was the instruction wording, not the hook
+
+After the hook experiment, the same flaw was found in the MCP server's own `instructions`: it said *"use shell search to discover names"* — endorsing the grep-first double-call. Reworded (map@3ce13ba) to *"read resolves a bare name/path#name directly; for a known symbol skip the grep; grep only for a name you don't know yet."* Re-measured with **no hook at all**, n=3:
+
+| arm | grep-first turns | notes |
+|---|---|---|
+| A — old instructions, no hook | 26/45 (58%) | the original defect |
+| B2 — retargeted **hook** | 3/45 (7%) | all 3 at turn 1 (hook fires reactively, can't pre-empt the first grep) |
+| **corrected instructions, no hook** | **0/45 (0%)** | every turn incl. turn 1, all 3 runs; early 0% / late 0% (no decay) |
+
+**This corrected the earlier interpretation.** The "regression" was not the agent *forgetting* a good rule — it was the agent *obeying a bad one* (the old instruction actively permitted grep-discovery). System/tool-level instructions are high-salience and do **not** dilute the way a mid-conversation skill message does, so once the instruction is unambiguous the agent follows it at 0% with no decay — and the instruction is in context from turn 1, so it even pre-empts the first grep the reactive hook cannot.
+
+**Implication:** the simplest possible fix — one correct sentence in the always-on, stateless, cross-host tool surface — **outperformed the stateful, Claude-Code-only hook**. The hook is now belt-and-suspenders insurance for *untested* very-long / very-large sessions where even tool instructions might dilute; it is not the load-bearing piece.
+
+**Caveats:** 15 turns, one small repo (187 symbols), Claude Code, n=3. Long (50+ turn) / large-context sessions and other hosts are untested — that is exactly where a re-injection hook could still earn its place.
+
 ## Arms
 - **A** — no hook (code-map MCP routing instructions only).
 - **B** — original PreToolUse guard hook.
