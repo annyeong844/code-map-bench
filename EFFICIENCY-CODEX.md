@@ -31,6 +31,22 @@ cell itself saved **20.0% effective input, 24.1% raw input, and 12.1% time**. Th
 not a universal property of `read`. See the [full method and grader audit](results/gpt56-sol-pass30.md)
 and machine-readable [aggregates](results/gpt56-sol-pass30.json).
 
+### Multi-stage follow-up: paired n=10 pilot
+
+We also ran three continuous four-stage engineering workflows in resumed sessions:
+orient, trace, change-impact analysis, then tool-free synthesis. Across 10 paired
+passes (120 scored stages per strategy), code-map reduced effective input **31.8%**,
+adjusted input **22.8%**, raw input **40.4%**, output **16.7%**, elapsed time
+**14.7%**, MCP calls **74.6%**, and tool-result payload **25.5%**. Semantic
+correctness tied at 120/120 stages per strategy.
+
+The effective-input and call reductions stayed nearly identical under alternating
+order, but elapsed savings moved from 6.8% on grep-first passes to 21.3% on map-first
+passes. One workflow also had 1.9% *larger* map payload despite fewer calls. Treat this
+as an exploratory **n=10 pilot, not pass@30**; it motivates the larger confirmation
+run without replacing it. Full method and caveats:
+[`results/gpt56-sol-workflow-pilot10.md`](./results/gpt56-sol-workflow-pilot10.md).
+
 ## The headline: pass@30 plugin benchmark (codex, 150 tasks)
 
 The definitive run — not a single forced task but **150 tasks × 5 scenarios at pass@30**,
