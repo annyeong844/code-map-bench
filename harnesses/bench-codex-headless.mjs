@@ -267,6 +267,27 @@ function taskPrompt(strategy, task, ordinal, total) {
   return chunks.join('\n');
 }
 
+function workflowStepPrompt(strategy, task, step, workflowOrdinal, workflowTotal, stepOrdinal, stepTotal) {
+  const chunks = [
+    `Workflow ${workflowOrdinal}/${workflowTotal}: ${task.id}`,
+    `Step ${stepOrdinal}/${stepTotal}: ${step.id}`,
+    step.prompt,
+    '',
+    'This is one stage of a continuous workflow in the same session. Use facts established in earlier stages, but do not assume facts that were not inspected.',
+    'Return JSON only. Put the answer in `answer`; list newly inspected evidence in `evidence`.',
+  ];
+  if (step.noToolExpected) {
+    chunks.push('', 'Synthesis stage: do not call tools or inspect files. Answer only from the workflow context already established.');
+  } else if ((strategy === 'map-batch' || strategy === 'map-skill') && Array.isArray(step.mapRefs) && step.mapRefs.length) {
+    chunks.push('', 'Known independent refs for this stage. Read all of them in one code-map call with refs:');
+    chunks.push(step.mapRefs.map((r) => `- ${r}`).join('\n'));
+  } else if ((strategy === 'native' || strategy === 'grep-mcp') && Array.isArray(step.nativeHints) && step.nativeHints.length) {
+    chunks.push('', 'Baseline hints. Search, then directly read only the useful ranges in these files; code-map is unavailable:');
+    chunks.push(step.nativeHints.map((r) => `- ${r}`).join('\n'));
+  }
+  return chunks.join('\n');
+}
+
 function taskCategory(task) {
   return String(task.category ?? task.scenario ?? 'uncategorized');
 }
@@ -525,7 +546,7 @@ function applyStrategyChecks(strategy, task, check, turn) {
     misses.push(`native strategy used MCP ${turn.mcpCallCount} time(s)`);
   }
   if (strategy === 'grep-mcp') {
-    if ((turn.toolCounts['mcp:grep-baseline'] ?? 0) < 1) misses.push('grep-mcp strategy did not use the grep baseline tool');
+    if (!task.noToolExpected && (turn.toolCounts['mcp:grep-baseline'] ?? 0) < 1) misses.push('grep-mcp strategy did not use the grep baseline tool');
     if ((turn.toolCounts['mcp:code-map'] ?? 0) > 0) misses.push('grep-mcp strategy used code-map');
     if (turn.mcpFailedCallCount > 0) misses.push(`grep-mcp strategy had ${turn.mcpFailedCallCount} failed MCP call(s)`);
   }
@@ -943,6 +964,38 @@ async function main() {
       for (let i = 0; i < spec.tasks.length; i++) {
         const task = spec.tasks[i];
         const ordinal = i + 1;
+
+        // Multi-stage workflow: every stage is scored, while the resumed session carries
+        // prior findings forward. A final noToolExpected stage measures pure context reuse.
+        if (task.kind === 'workflow') {
+          const steps = task.steps ?? [];
+          if (!steps.length) throw new Error(`workflow task ${task.id} has no steps`);
+          for (let stepIndex = 0; stepIndex < steps.length; stepIndex++) {
+            const step = steps[stepIndex];
+            const stepTask = {
+              ...task,
+              id: `${task.id}/${step.id}`,
+              prompt: step.prompt,
+              mapRefs: step.mapRefs ?? [],
+              nativeHints: step.nativeHints ?? [],
+              expected: step.expected ?? {},
+              noToolExpected: step.noToolExpected === true,
+            };
+            const turn = await runCodex({
+              opts,
+              strategy,
+              sessionId: seed.threadId,
+              prompt: workflowStepPrompt(strategy, task, step, ordinal, spec.tasks.length, stepIndex + 1, steps.length),
+              schemaPath,
+              turnDir: passDir,
+              name: `workflow-${task.id}-step-${String(stepIndex + 1).padStart(2, '0')}-${step.id}`,
+            });
+            const check = applyStrategyChecks(strategy, stepTask, evaluate(turn.finalText, stepTask.expected), turn);
+            pushTurnRow(stepTask, turn, { phase: 'workflow_step', scored: true, check });
+            await writeSummary(opts.out, opts, spec, rows);
+          }
+          continue;
+        }
 
         // changed-refresh task: establish working set -> drift files -> scored refresh.
         if (task.kind === 'refresh') {
