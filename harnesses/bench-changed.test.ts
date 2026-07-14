@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 // The codex-headless harness exports its pure pieces for unit testing; importing it
 // does not run main() (it is gated on direct invocation).
-import { applyMutations, summarizeEvents } from './bench-codex-headless.mjs';
+import { applyMutations, applyStrategyChecks, parseArgs, summarizeEvents } from './bench-codex-headless.mjs';
 
 /** Shape a code-map MCP read item the way `codex exec --json` emits it. */
 function readItem(args: Record<string, unknown>, extra: Record<string, unknown> = {}) {
@@ -30,6 +30,29 @@ test('summarizeEvents ignores changedOnly on a failed call', () => {
   const s = summarizeEvents([readItem({ refs: ['a'], changedOnly: true }, { status: 'failed' })], {});
   assert.equal(s.mcpFailedCallCount, 1);
   assert.equal(s.mcpChangedReadCallCount, 0, 'a failed call is not adoption');
+});
+
+test('--tasks resolves from the bench invocation cwd, independently of --repo', () => {
+  const repo = mkdtempSync(join(tmpdir(), 'bench-target-'));
+  const opts = parseArgs(['--repo', repo, '--tasks', 'harnesses/tasks.workflow.json', '--passes', '1']);
+  assert.equal(opts.tasks, resolve('harnesses/tasks.workflow.json'));
+  assert.notEqual(opts.tasks, join(repo, 'harnesses/tasks.workflow.json'));
+});
+
+test('noToolExpected rejects successful grep, code-map, and shell calls', () => {
+  const semanticPass = { passed: true, misses: [], parsed: {} };
+  const task = { noToolExpected: true, mapRefs: [] };
+  const cases = [
+    ['grep-mcp', { type: 'item.completed', item: { type: 'mcp_tool_call', server: 'grep-baseline', tool: 'grep', status: 'completed', arguments: {} } }],
+    ['map-batch', readItem({ ref: 'src/a.ts#A' })],
+    ['native', { type: 'item.completed', item: { type: 'command_execution', status: 'completed', command: 'rg A src' } }],
+  ];
+  for (const [strategy, event] of cases) {
+    const result = applyStrategyChecks(strategy, task, semanticPass, summarizeEvents([event], {}));
+    assert.equal(result.passed, false, `${strategy} tool use must fail synthesis`);
+    assert.match(result.misses.join('\n'), /tool-free stage used 1 tool call/);
+  }
+  assert.equal(applyStrategyChecks('map-batch', task, semanticPass, summarizeEvents([], {})).passed, true);
 });
 
 function fixture(files: Record<string, string>): string {

@@ -97,7 +97,8 @@ function usage() {
 
 Options:
   --repo <path>          Target repository. Default: cwd
-  --tasks <path>         Task spec JSON. Default: bundled smoke tasks
+  --tasks <path>         Task spec JSON, resolved from the invocation cwd.
+                         Default: bundled diverse tasks
   --out <path>           Output directory. Default: .bench/codex-headless/<timestamp>
   --passes <n>           Independent passes per strategy. Default: 30
   --strategies <list>    Comma list: native,grep-mcp,map-batch,map-changed,map-skill.
@@ -126,7 +127,7 @@ Options:
 `;
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const opts = {
     repo: process.cwd(),
     tasks: '',
@@ -187,7 +188,7 @@ function parseArgs(argv) {
   }
   if (!['chatgpt', 'ambient'].includes(opts.auth)) throw new Error('--auth must be chatgpt or ambient');
   opts.repo = resolve(opts.repo);
-  opts.tasks = opts.tasks ? resolve(opts.repo, opts.tasks) : DEFAULT_TASKS;
+  opts.tasks = opts.tasks ? resolve(opts.tasks) : DEFAULT_TASKS;
   opts.out = opts.out ? resolve(opts.out) : resolve(opts.repo, '.bench/codex-headless', timestamp());
   opts.mapIndex = opts.mapIndex ? resolve(opts.mapIndex) : resolve(opts.repo, '.map-index.json');
   return opts;
@@ -546,8 +547,12 @@ function evaluate(finalText, expected = {}) {
   return { passed: misses.length === 0, misses, parsed };
 }
 
-function applyStrategyChecks(strategy, task, check, turn) {
+export function applyStrategyChecks(strategy, task, check, turn) {
   const misses = [...check.misses];
+  if (task.noToolExpected) {
+    const toolCalls = Object.values(turn.toolCounts ?? {}).reduce((sum, count) => sum + Number(count ?? 0), 0);
+    if (toolCalls > 0) misses.push(`tool-free stage used ${toolCalls} tool call(s)`);
+  }
   if (strategy === 'native' && turn.mcpCallCount > 0) {
     misses.push(`native strategy used MCP ${turn.mcpCallCount} time(s)`);
   }

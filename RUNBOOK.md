@@ -93,10 +93,13 @@ tool-free synthesis stages:
 ```bash
 cd code-map-bench
 CODE_MAP_ROOT=../map node harnesses/bench-codex-headless.mjs \
-  --run --passes 10 --tasks harnesses/tasks.workflow.json \
+  --run --passes 10 --tasks "$PWD/harnesses/tasks.workflow.json" \
   --strategies grep-mcp,map-batch \
   --model gpt-5.6-sol --repo ../map
 ```
+
+`--tasks` is resolved from the shell's invocation directory, independently of the target
+`--repo`; the absolute `$PWD` form above keeps the captured sibling-checkout layout explicit.
 
 This is the captured paired **n=10 pilot**, not a pass@30 confirmation. The aggregate,
 order check, bootstrap intervals, and audit are in
