@@ -81,12 +81,52 @@ console.log('\n[K=30 efficiency] turns saved (robust) vs tokens (~0 — token he
 }
 
 
-// ── 7. drift-safe EDIT targeting (aim): 0 silent mistargets ──
+// ── 7. GPT-5.6 Sol known-ref pass@30 vs forced real-rg baseline ───────────────
+console.log('\n[GPT-5.6 Sol pass@30] known refs: code-map vs forced real rg');
+{
+  const r = j('gpt56-sol-pass30.json');
+  const g = r.aggregate['grep-mcp'];
+  const m = r.aggregate['map-batch'];
+  const reduction = (key) => (1 - m[key] / g[key]) * 100;
+  check('effective input saved', +reduction('effectiveInput').toFixed(1), 22.4, 0.1);
+  check('adjusted input saved', +reduction('adjustedInput').toFixed(1), 19.8, 0.1);
+  check('raw input saved', +reduction('rawInput').toFixed(1), 26.3, 0.1);
+  check('elapsed saved', +reduction('elapsedMs').toFixed(1), 14.7, 0.1);
+  check('MCP calls saved', +reduction('mcpCalls').toFixed(1), 67.9, 0.1);
+  check('tool payload saved', +reduction('toolPayloadChars').toFixed(1), 58.4, 0.1);
+  check('grep semantic answers', g.semanticPassed, 90);
+  check('map semantic answers', m.semanticPassed, 90);
+  check('grep pass@30', g.passAt30, 1);
+  check('map pass@30', m.passAt30, 1);
+}
+
+// ── 8. GPT-5.6 Sol multi-stage paired n=10 pilot ─────────────────────────────
+console.log('\n[GPT-5.6 Sol workflow pilot] 3 four-stage workflows, paired n=10');
+{
+  const r = j('gpt56-sol-workflow-pilot10.json');
+  const g = r.aggregate['grep-mcp'];
+  const m = r.aggregate['map-batch'];
+  const reduction = (key) => (1 - m[key] / g[key]) * 100;
+  check('effective input saved', +reduction('effectiveInput').toFixed(1), 31.8, 0.1);
+  check('adjusted input saved', +reduction('adjustedInput').toFixed(1), 22.8, 0.1);
+  check('raw input saved', +reduction('rawInput').toFixed(1), 40.4, 0.1);
+  check('output saved', +reduction('output').toFixed(1), 16.7, 0.1);
+  check('elapsed saved', +reduction('elapsedMs').toFixed(1), 14.7, 0.1);
+  check('MCP calls saved', +reduction('mcpCalls').toFixed(1), 74.6, 0.1);
+  check('tool payload saved', +reduction('toolPayloadChars').toFixed(1), 25.5, 0.1);
+  check('grep semantic stages', g.semanticPassed, 120);
+  check('map semantic stages', m.semanticPassed, 120);
+  check('map retrieval batch calls', m.batchCalls, 90);
+  check('grep synthesis calls', r.stageAggregate.synthesis['grep-mcp'].mcpCalls, 0);
+  check('map synthesis calls', r.stageAggregate.synthesis['map-batch'].mcpCalls, 0);
+}
+
+// ── 9. drift-safe EDIT targeting (aim): 0 silent mistargets ──
 console.log('\n[edit targeting (aim)] re-aggregate aim-result.json (snippet → char range, after churn)');
 { const a = j('aim-result.json'); check('aim silent mistargets', a.mistarget, 0);
   console.log(`     hit ${(100*a.hit/a.total).toFixed(1)}% · refuse ${(100*a.refuse/a.total).toFixed(1)}% · mistarget 0  |  naive mistarget ${(100*a.naiveSilent/a.total).toFixed(1)}% (n=${a.total})`); }
 
-// ── 8. oracle caller precision: fewer files to read vs grep (from oracle-gt2.json) ──
+// ── 10. oracle caller precision: fewer files to read vs grep (from oracle-gt2.json) ──
 console.log('\n[oracle precision] type-confirmed callers vs grep name-matches (oracle-gt2.json + live grep)');
 { const o = j('oracle-gt2.json'); const CL='./cline-main';
   const { execSync } = await import('node:child_process');

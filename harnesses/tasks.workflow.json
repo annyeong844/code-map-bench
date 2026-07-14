@@ -1,0 +1,112 @@
+{
+  "name": "code-map multi-stage engineering workflows",
+  "version": 1,
+  "description": "Three four-stage workflows in one resumed agent session: orient, trace, analyze change impact, then synthesize without more retrieval.",
+  "tasks": [
+    {
+      "id": "mcp-contract-change",
+      "kind": "workflow",
+      "category": "multi-stage",
+      "scenario": "workflow-mcp-contract",
+      "steps": [
+        {
+          "id": "orient-contract",
+          "prompt": "Establish the current MCP read contract: single vs batch selectors, validation, ordinary batch cap, and response shape.",
+          "mapRefs": ["src/mcp/server.ts#TOOLS", "src/mcp/server.ts#dispatch"],
+          "nativeHints": ["src/mcp/server.ts"],
+          "expected": {"requiredSubstrings": ["ref", "refs", "64", "results"], "requiredRegex": ["rejects? .*both|both .*(reject|error)|not both|never both|mutual|exclusive"]}
+        },
+        {
+          "id": "trace-read-status",
+          "prompt": "Trace an ordinary batch item from dispatch into the read implementation. Explain how fresh, uniquely relocated, and lost-anchor source is reported.",
+          "mapRefs": ["src/mcp/server.ts#dispatch", "src/core/read.ts#readCore"],
+          "nativeHints": ["src/mcp/server.ts", "src/core/read.ts"],
+          "expected": {"requiredSubstrings": ["exact", "relocated", "anchor-lost"]}
+        },
+        {
+          "id": "compare-delta-cap",
+          "prompt": "Compare normal batch handling with changedOnly delta handling. Identify their distinct caps and why the delta returns unchanged IDs separately from changed slices.",
+          "mapRefs": ["src/mcp/server.ts#dispatch", "src/core/read.ts#changed"],
+          "nativeHints": ["src/mcp/server.ts", "src/core/read.ts"],
+          "expected": {"requiredSubstrings": ["64", "256", "unchanged", "changed"]}
+        },
+        {
+          "id": "synthesize-plan",
+          "prompt": "Using only the established workflow context, write a concise implementation and test plan for making the normal and changedOnly limits configurable while preserving mutual exclusion, deduplication, and response compatibility.",
+          "noToolExpected": true,
+          "expected": {"requiredSubstrings": ["test", "dedup"], "requiredRegex": ["ref.*refs|refs.*ref"]}
+        }
+      ]
+    },
+    {
+      "id": "index-refresh-hardening",
+      "kind": "workflow",
+      "category": "multi-stage",
+      "scenario": "workflow-index-refresh",
+      "steps": [
+        {
+          "id": "orient-reload",
+          "prompt": "Establish how the MCP server notices and reloads an index and how loadIndex validates the parsed file.",
+          "mapRefs": ["src/mcp/server.ts#ensureFresh", "src/core/store.ts#loadIndex"],
+          "nativeHints": ["src/mcp/server.ts", "src/core/store.ts"],
+          "expected": {"requiredSubstrings": ["size", "meta", "code-map"], "requiredRegex": ["mtime|modification time"]}
+        },
+        {
+          "id": "trace-incremental",
+          "prompt": "Trace how buildIndex decides which files can be reused and which must be read and parsed again. Include the same-size/restored-mtime safeguards.",
+          "mapRefs": ["src/core/build-index.ts#buildIndex", "src/core/build-index.ts#statAll"],
+          "nativeHints": ["src/core/build-index.ts"],
+          "expected": {"requiredSubstrings": ["mtime", "size", "ctime", "ino"], "requiredRegex": ["reus(e|ed|able)"]}
+        },
+        {
+          "id": "trace-atomic-save",
+          "prompt": "Connect saveIndex's atomic-write behavior to ensureFresh's retry behavior. Explain what happens on rename or half-written-index failure.",
+          "mapRefs": ["src/core/store.ts#saveIndex", "src/mcp/server.ts#ensureFresh"],
+          "nativeHints": ["src/core/store.ts", "src/mcp/server.ts"],
+          "expected": {"requiredSubstrings": ["temp", "rename"], "requiredRegex": ["prior|previous|existing|last good", "retr(y|ied|ies)|next (tool )?call"]}
+        },
+        {
+          "id": "synthesize-plan",
+          "prompt": "Without further inspection, produce an implementation and regression-test plan for crash-safe index replacement that never discards the last good in-memory index.",
+          "noToolExpected": true,
+          "expected": {"requiredSubstrings": ["test"], "requiredRegex": ["atomic|temp.*rename|rename.*temp", "prior|previous|existing|last good", "retr(y|ied|ies)|next (request|call)"]}
+        }
+      ]
+    },
+    {
+      "id": "python-backend-extension",
+      "kind": "workflow",
+      "category": "multi-stage",
+      "scenario": "workflow-python-backend",
+      "steps": [
+        {
+          "id": "orient-dispatch",
+          "prompt": "Establish how buildIndex selects Python files, invokes the Python backend, and merges its JSON records into the shared index pipeline.",
+          "mapRefs": ["src/core/build-index.ts#runPyBackend", "src/core/build-index.ts#buildIndex", "src/core/extract-symbols.ts#isPython"],
+          "nativeHints": ["src/core/build-index.ts", "src/core/extract-symbols.ts"],
+          "expected": {"requiredSubstrings": ["python3", "JSON", "changed"], "requiredRegex": ["stdin|newline[- ]delimited target"]}
+        },
+        {
+          "id": "trace-coordinates",
+          "prompt": "Trace how the Python backend emits symbols and converts Python offsets to the UTF-16 coordinate system expected by Node reads.",
+          "mapRefs": ["src/py/extract.py#extract", "src/core/build-index.ts#buildIndex"],
+          "nativeHints": ["src/py/extract.py", "src/core/build-index.ts"],
+          "expected": {"requiredSubstrings": ["ast", "UTF-16", "charStart"]}
+        },
+        {
+          "id": "trace-shared-fanin",
+          "prompt": "Explain how Python import edges join the same shared fan-in pipeline used by TS/JS and what call-dispatch limitations remain.",
+          "mapRefs": ["src/core/build-index.ts#buildIndex", "src/core/fan-in.ts#computeFanIn", "src/py/extract.py#extract"],
+          "nativeHints": ["src/core/build-index.ts", "src/core/fan-in.ts", "src/py/extract.py"],
+          "expected": {"requiredSubstrings": ["fileImports"], "requiredRegex": ["computeFanIn|recomputes? fan-in|fan-in globally", "same|shared", "obj[.]method|object/member|dispatch|unresolved|receiver"]}
+        },
+        {
+          "id": "synthesize-plan",
+          "prompt": "Using the preceding findings only, design an implementation and test plan for adding Python decorator metadata without breaking UTF-16 slicing, incremental reuse, or the shared fan-in path.",
+          "noToolExpected": true,
+          "expected": {"requiredSubstrings": ["decorator", "UTF-16", "fan-in", "test"], "requiredRegex": ["incremental|reus(e|ed)|unchanged"]}
+        }
+      ]
+    }
+  ]
+}

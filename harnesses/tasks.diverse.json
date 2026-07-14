@@ -21,7 +21,7 @@
           "64"
         ],
         "requiredRegex": [
-          "(not both|mutual|exclusive|exactly one)"
+          "(not both|never both|mutual|exclusive|exactly one|rejects? (supplying|providing)? ?both|both .*reject)"
         ]
       }
     },

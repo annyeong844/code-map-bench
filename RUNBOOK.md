@@ -65,6 +65,43 @@ BENCH_K=10 node harness.mjs
 Each prints a table and writes `results/*.json` (already captured here from the
 original runs, for comparison).
 
+## GPT-5.6 Sol known refs vs forced real `rg`
+
+Clone `map` and `code-map-bench` as sibling directories, build the index in `map`, then:
+
+```bash
+cd code-map-bench
+map index --root ../map --out ../map/.map-index.json --force
+CODE_MAP_ROOT=../map node harnesses/bench-codex-headless.mjs \
+  --run --passes 30 --max-tasks 3 \
+  --strategies grep-mcp,map-batch \
+  --model gpt-5.6-sol --repo ../map
+```
+
+`grep-mcp` hides code-map and exposes only `harnesses/grep-baseline-server.mjs`, which
+invokes real `rg` and direct line-range reads. This keeps the baseline reproducible in
+sandboxes where a nested Codex process cannot execute shell commands. Strategy order is
+alternated each pass. The captured aggregate and audit are in
+`results/gpt56-sol-pass30.{json,md}`.
+
+### Multi-stage workflow pilot
+
+Use the same sibling checkouts and index, but select the workflow task file. Each
+workflow keeps one resumed session across orient, trace, impact-analysis, and
+tool-free synthesis stages:
+
+```bash
+cd code-map-bench
+CODE_MAP_ROOT=../map node harnesses/bench-codex-headless.mjs \
+  --run --passes 10 --tasks harnesses/tasks.workflow.json \
+  --strategies grep-mcp,map-batch \
+  --model gpt-5.6-sol --repo ../map
+```
+
+This is the captured paired **n=10 pilot**, not a pass@30 confirmation. The aggregate,
+order check, bootstrap intervals, and audit are in
+`results/gpt56-sol-workflow-pilot10.{json,md}`.
+
 ## Drift resistance (the headline — pure local, no agent/API, fast)
 
 ```bash
