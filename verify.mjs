@@ -94,6 +94,46 @@ console.log('\n[oracle precision] type-confirmed callers vs grep name-matches (o
   if(g) console.log(`     files to read: grep ${g} vs oracle ${oc} → ${Math.round((1-oc/g)*100)}% fewer (cline; needs cline-main + code-oracle/tsgo)`);
   else console.log('     (cline-main not present — skip; see RUNBOOK)'); }
 
+// ── 9. codex pass@30 top-line: effective tokens + shell commands + pass@30 tie ──
+// Raw aggregate vendored as results/pass30-codex-effective.json (the heavy per-pass
+// JSONL transcripts stay under .runs/, gitignored). Scored task turns only.
+console.log('\n[codex pass@30] re-aggregate pass30-codex-effective.json (scored turns only)');
+{
+  const d = j('pass30-codex-effective.json');
+  const rows = d.results.filter((r) => r.includeInComparison);
+  const by = {};
+  for (const r of rows) {
+    const s = (by[r.strategy] ??= { eff: 0, cmd: 0, n: 0 });
+    s.eff += r.usage.effective_input_tokens; s.cmd += r.commandCount; s.n++;
+  }
+  const nat = by.native, map = by['map-batch'];
+  check(`effective input saved % (native n=${nat.n}, map n=${map.n})`, Math.round((1 - map.eff / nat.eff) * 1000) / 10, 18.6, 0.5);
+  check('shell commands saved %', Math.round((1 - map.cmd / nat.cmd) * 100), 67, 1);
+  const passAt = (s) => {
+    const byTask = {};
+    for (const r of d.results.filter((x) => x.scored && x.strategy === s)) (byTask[r.task] ??= []).push(r.passed);
+    const tasks = Object.values(byTask);
+    return tasks.filter((ps) => ps.some(Boolean)).length / tasks.length;
+  };
+  check('native pass@30', passAt('native'), 1.0);
+  check('map-batch pass@30', passAt('map-batch'), 1.0);
+}
+
+// ── 10. grok pass@30 (our way): median Δ context tokens on known-ref reads ──
+// Raw aggregate vendored as results/grok-pass30-ourway.json. contextTokensUsed on
+// a scored EndTurn row is that turn's delta (seed turn warms cache, scored:false).
+console.log('\n[grok pass@30] re-aggregate grok-pass30-ourway.json (median Δ context tokens, known-ref)');
+{
+  const d = j('grok-pass30-ourway.json');
+  const median = (xs) => { const a = [...xs].sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : 0; };
+  const rows = d.results.filter((r) => r.includeInComparison && r.stopReason === 'EndTurn' && r.contextTokensUsed > 0);
+  const scen = (sc, s) => median(rows.filter((r) => r.scenario === sc && r.strategy === s).map((r) => r.contextTokensUsed));
+  for (const [sc, want] of [['known-cross-file', 60], ['known-single-symbol', 53]]) {
+    const m = scen(sc, 'map-batch'), n = scen(sc, 'native');
+    check(`${sc} token Δ % (median)`, Math.round((1 - m / n) * 100), want, 1);
+  }
+}
+
 console.log(`\n${fail === 0 ? '✓ ALL' : `✗ ${fail}`} re-derivable headline numbers ${fail === 0 ? 'match the raw data' : 'MISMATCH'} (${pass} passed, ${fail} failed).`);
 console.log('Not re-derived here (raw not captured — re-run the harness, see RUNBOOK): semantic recall@10, call-graph precision/recall.');
 process.exit(fail === 0 ? 0 : 1);

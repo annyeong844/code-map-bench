@@ -7,7 +7,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_TASKS = resolve(SCRIPT_DIR, '../bench/codex-headless/tasks.example.json');
+const DEFAULT_TASKS = resolve(SCRIPT_DIR, 'tasks.example.json');
 const USAGE_KEYS = [
   'input_tokens',
   'cached_input_tokens',
@@ -195,9 +195,15 @@ function codexArgs({ opts, strategy, sessionId, schemaPath, finalPath }) {
   if (opts.model) args.push('-m', opts.model);
   args.push('-c', 'approval_policy="never"');
   if (strategy === 'map-batch' || strategy === 'map-changed' || strategy === 'map-skill') {
-    args.push('-c', 'mcp_servers."code-map".command="node"');
-    args.push('-c', `mcp_servers."code-map".args=["${escapeTomlString(resolve(SCRIPT_DIR, '../src/mcp/server.ts'))}"]`);
-    args.push('-c', `mcp_servers."code-map".env.MAP_INDEX="${escapeTomlString(opts.mapIndex)}"`);
+    // Unquoted key: the latest Codex CLI (0.144.x) treats quotes in a `-c`
+    // dotted path as literal, so `mcp_servers."code-map"` registers the server
+    // under the name `"code-map"` (quotes included) and routing to `code-map`
+    // fails. `code-map` is a valid TOML bare key, so drop the quotes.
+    // Map lives in the sibling repo now (bench was split out), so point at
+    // ../../map/src, not the old in-repo ../src.
+    args.push('-c', 'mcp_servers.code-map.command="node"');
+    args.push('-c', `mcp_servers.code-map.args=["${escapeTomlString(resolve(SCRIPT_DIR, '../../map/src/mcp/server.ts'))}"]`);
+    args.push('-c', `mcp_servers.code-map.env.MAP_INDEX="${escapeTomlString(opts.mapIndex)}"`);
   }
   if (opts.auth === 'chatgpt') args.push('-c', 'forced_login_method="chatgpt"');
   if (sessionId) args.push(sessionId);

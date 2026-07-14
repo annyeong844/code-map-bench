@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_TASKS = resolve(SCRIPT_DIR, '../bench/codex-headless/tasks.diverse.json');
+const DEFAULT_TASKS = resolve(SCRIPT_DIR, 'tasks.diverse.json');
 const GROK_HOME = process.env.GROK_HOME || join(homedir(), '.grok');
 
 const STRATEGIES = {
