@@ -84,6 +84,24 @@ sandboxes where a nested Codex process cannot execute shell commands. Strategy o
 alternated each pass. The captured aggregate and audit are in
 `results/gpt56-sol-pass30.{json,md}`.
 
+### Multi-stage workflow pilot
+
+Use the same sibling checkouts and index, but select the workflow task file. Each
+workflow keeps one resumed session across orient, trace, impact-analysis, and
+tool-free synthesis stages:
+
+```bash
+cd code-map-bench
+CODE_MAP_ROOT=../map node harnesses/bench-codex-headless.mjs \
+  --run --passes 10 --tasks harnesses/tasks.workflow.json \
+  --strategies grep-mcp,map-batch \
+  --model gpt-5.6-sol --repo ../map
+```
+
+This is the captured paired **n=10 pilot**, not a pass@30 confirmation. The aggregate,
+order check, bootstrap intervals, and audit are in
+`results/gpt56-sol-workflow-pilot10.{json,md}`.
+
 ## Drift resistance (the headline — pure local, no agent/API, fast)
 
 ```bash
