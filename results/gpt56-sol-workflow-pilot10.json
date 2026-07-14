@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-14",
+  "model": "gpt-5.6-sol",
+  "passes": 10,
+  "workflows": 3,
+  "stagesPerWorkflow": 4,
+  "stagesPerStrategy": 120,
+  "strategyOrder": "alternated 5/5",
+  "status": "paired pilot; pass@30 pending",
+  "baseline": "real rg plus direct line-range reads through a read-only MCP wrapper; code-map unavailable",
+  "workflowShape": "orient, trace, impact analysis, synthesize without tools in one resumed session",
+  "metricDefinition": {
+    "adjustedInput": "input_tokens - cached_input_tokens",
+    "effectiveInput": "uncached_input_tokens + cached_input_tokens * 0.1"
+  },
+  "aggregate": {
+    "grep-mcp": {
+      "steps": 120,
+      "semanticPassed": 120,
+      "effectiveInput": 11127488,
+      "adjustedInput": 6037647,
+      "rawInput": 56936079,
+      "output": 403373,
+      "elapsedMs": 2918101,
+      "mcpCalls": 354,
+      "mcpFailedCalls": 1,
+      "batchCalls": 0,
+      "toolPayloadChars": 736847
+    },
+    "map-batch": {
+      "steps": 120,
+      "semanticPassed": 120,
+      "effectiveInput": 7587089,
+      "adjustedInput": 4661419,
+      "rawInput": 33918123,
+      "output": 336049,
+      "elapsedMs": 2489570,
+      "mcpCalls": 90,
+      "mcpFailedCalls": 0,
+      "batchCalls": 90,
+      "toolPayloadChars": 549230
+    }
+  },
+  "scenarioAggregate": {
+    "workflow-mcp-contract": {
+      "grep-mcp": { "effectiveInput": 1782435, "adjustedInput": 1210352, "rawInput": 6931184, "output": 58069, "elapsedMs": 907907, "mcpCalls": 97, "mcpFailedCalls": 1, "toolPayloadChars": 260812 },
+      "map-batch": { "effectiveInput": 1389819, "adjustedInput": 1020153, "rawInput": 4716793, "output": 49840, "elapsedMs": 854048, "mcpCalls": 30, "mcpFailedCalls": 0, "toolPayloadChars": 134890 }
+    },
+    "workflow-index-refresh": {
+      "grep-mcp": { "effectiveInput": 3540684, "adjustedInput": 1992014, "rawInput": 17478734, "output": 128043, "elapsedMs": 913815, "mcpCalls": 105, "mcpFailedCalls": 0, "toolPayloadChars": 164785 },
+      "map-batch": { "effectiveInput": 2448074, "adjustedInput": 1535640, "rawInput": 10659992, "output": 108135, "elapsedMs": 764742, "mcpCalls": 30, "mcpFailedCalls": 0, "toolPayloadChars": 97310 }
+    },
+    "workflow-python-backend": {
+      "grep-mcp": { "effectiveInput": 5804369, "adjustedInput": 2835281, "rawInput": 32526161, "output": 217261, "elapsedMs": 1096379, "mcpCalls": 152, "mcpFailedCalls": 0, "toolPayloadChars": 311250 },
+      "map-batch": { "effectiveInput": 3749196, "adjustedInput": 2105626, "rawInput": 18541338, "output": 178074, "elapsedMs": 870780, "mcpCalls": 30, "mcpFailedCalls": 0, "toolPayloadChars": 317030 }
+    }
+  },
+  "stageAggregate": {
+    "retrieval": {
+      "grep-mcp": { "steps": 90, "effectiveInput": 7906524, "adjustedInput": 4357059, "rawInput": 39851715, "output": 280988, "elapsedMs": 2315097, "mcpCalls": 354, "mcpFailedCalls": 1, "toolPayloadChars": 736847 },
+      "map-batch": { "steps": 90, "effectiveInput": 5387582, "adjustedInput": 3353533, "rawInput": 23694013, "output": 233580, "elapsedMs": 1857737, "mcpCalls": 90, "mcpFailedCalls": 0, "toolPayloadChars": 549230 }
+    },
+    "synthesis": {
+      "grep-mcp": { "steps": 30, "effectiveInput": 3220964, "adjustedInput": 1680588, "rawInput": 17084364, "output": 122385, "elapsedMs": 603004, "mcpCalls": 0, "mcpFailedCalls": 0, "toolPayloadChars": 0 },
+      "map-batch": { "steps": 30, "effectiveInput": 2199507, "adjustedInput": 1307886, "rawInput": 10224110, "output": 102469, "elapsedMs": 631833, "mcpCalls": 0, "mcpFailedCalls": 0, "toolPayloadChars": 0 }
+    }
+  },
+  "pairedBootstrap95Pct": {
+    "effectiveInputReduction": [20.2, 40.9],
+    "adjustedInputReduction": [4.1, 38.3],
+    "rawInputReduction": [33.0, 45.9],
+    "outputReduction": [11.6, 21.4],
+    "elapsedReduction": [4.7, 23.3],
+    "mcpCallsReduction": [72.4, 76.6]
+  },
+  "orderBalance": {
+    "oddPassesGrepFirst": { "effectiveInputReduction": 31.7, "rawInputReduction": 36.1, "elapsedReduction": 6.8, "mcpCallsReduction": 74.9 },
+    "evenPassesMapFirst": { "effectiveInputReduction": 31.9, "rawInputReduction": 44.4, "elapsedReduction": 21.3, "mcpCallsReduction": 74.3 }
+  },
+  "audit": {
+    "semanticConclusion": "All 240 stage answers were correct after semantic audit (120 per strategy).",
+    "recoveredBaselineToolArgumentFailure": 1,
+    "synthesisToolCalls": { "grep-mcp": 0, "map-batch": 0 },
+    "mapBatchCallsOnRetrievalStages": 90
+  }
+}
