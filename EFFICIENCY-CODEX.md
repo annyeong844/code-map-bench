@@ -10,6 +10,27 @@ Everything here is `claude -p` / `codex exec` headless, `--output-format json`, 
 audited (we count the tool calls), CONC=1 for the token-causal runs. Harnesses in
 `harnesses/`, raw in `results/`.
 
+## 2026 update: GPT-5.6 Sol vs a forced real-`rg` baseline
+
+A new paired pass@30 run closes an over-broad reading of the older single-read result.
+With code-map hidden from the baseline and real `rg` plus direct line reads forced through
+a read-only MCP wrapper, 90 scored tasks per strategy produced:
+
+| metric | forced `rg` | code-map | Δ |
+|---|---:|---:|---:|
+| effective input | 3,269,047 | 2,537,583 | **−22.4%** |
+| adjusted input | 2,205,904 | 1,768,280 | **−19.8%** |
+| raw input | 12,837,328 | 9,461,336 | **−26.3%** |
+| elapsed | 1,888,403 ms | 1,611,159 ms | **−14.7%** |
+| MCP calls | 280 | 90 | **−67.9%** |
+| tool payload | 663,329 chars | 275,790 chars | **−58.4%** |
+
+Observed pass@30 and semantic correctness tied (1.000; 90/90 each). The known-single
+cell itself saved **20.0% effective input, 24.1% raw input, and 12.1% time**. Thus the old
+"single read at K=30 ~0" remains a valid negative result for its Sonnet/Opus task, but is
+not a universal property of `read`. See the [full method and grader audit](results/gpt56-sol-pass30.md)
+and machine-readable [aggregates](results/gpt56-sol-pass30.json).
+
 ## The headline: pass@30 plugin benchmark (codex, 150 tasks)
 
 The definitive run — not a single forced task but **150 tasks × 5 scenarios at pass@30**,

@@ -7,7 +7,13 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_TASKS = resolve(SCRIPT_DIR, '../bench/codex-headless/tasks.example.json');
+const DEFAULT_TASKS = resolve(SCRIPT_DIR, 'tasks.diverse.json');
+const CODE_MAP_ROOT = resolve(
+  process.env.CODE_MAP_ROOT || resolve(SCRIPT_DIR, '../../map'),
+);
+const CODEX_SANDBOX = process.env.BENCH_CODEX_SANDBOX || 'read-only';
+const CODEX_APPROVAL_POLICY = process.env.BENCH_CODEX_APPROVAL_POLICY || 'never';
+const DISABLE_REMOTE_PLUGIN = process.env.BENCH_DISABLE_REMOTE_PLUGIN !== '0';
 const USAGE_KEYS = [
   'input_tokens',
   'cached_input_tokens',
@@ -26,6 +32,15 @@ const STRATEGIES = {
       'Use only shell-based lexical search and direct file reads such as rg, sed, nl, awk, cat, or similar commands.',
       'Do not use code-map or any MCP tool from code-map.',
       'Prefer small, targeted reads. Cite the files or symbols you inspected in the final JSON.',
+    ].join('\n'),
+  },
+  'grep-mcp': {
+    label: 'forced grep + direct read',
+    seed: [
+      'You are in the forced grep baseline arm of a retrieval benchmark.',
+      'code-map is unavailable. Use only the grep-baseline MCP tool.',
+      'For every task, first call grep_read with action="grep" to locate the named target, then call it with action="read" for the smallest useful line ranges.',
+      'Do not answer from memory. Cite the files and ranges you inspected in the final JSON.',
     ].join('\n'),
   },
   'map-batch': {
@@ -78,14 +93,15 @@ const RESPONSE_SCHEMA = {
 
 function usage() {
   return `Usage:
-  node scripts/bench-codex-headless.mjs --run --passes 30 --strategies native,map-batch
+  node harnesses/bench-codex-headless.mjs --run --passes 30 --repo ../map --strategies native,map-batch
 
 Options:
   --repo <path>          Target repository. Default: cwd
   --tasks <path>         Task spec JSON. Default: bundled smoke tasks
   --out <path>           Output directory. Default: .bench/codex-headless/<timestamp>
   --passes <n>           Independent passes per strategy. Default: 30
-  --strategies <list>    Comma list: native,map-batch. Default: native,map-batch
+  --strategies <list>    Comma list: native,grep-mcp,map-batch,map-changed,map-skill.
+                         Default: native,map-batch
   --max-tasks <n>        Limit tasks for a smoke run.
   --model <name>         Forwarded to codex exec/resume.
   --codex <bin>          Codex executable. Default: codex
@@ -191,13 +207,19 @@ function codexArgs({ opts, strategy, sessionId, schemaPath, finalPath }) {
   const args = sessionId ? ['exec', 'resume'] : ['exec'];
   if (opts.ignoreUserConfig) args.push('--ignore-user-config');
   args.push('--json', '--output-schema', schemaPath, '-o', finalPath);
-  if (!sessionId) args.push('-C', opts.repo, '--sandbox', 'read-only');
+  if (DISABLE_REMOTE_PLUGIN) args.push('-c', 'features.remote_plugin=false');
+  if (!sessionId) args.push('-C', opts.repo, '--sandbox', CODEX_SANDBOX);
   if (opts.model) args.push('-m', opts.model);
-  args.push('-c', 'approval_policy="never"');
+  args.push('-c', `approval_policy="${CODEX_APPROVAL_POLICY}"`);
   if (strategy === 'map-batch' || strategy === 'map-changed' || strategy === 'map-skill') {
-    args.push('-c', 'mcp_servers."code-map".command="node"');
-    args.push('-c', `mcp_servers."code-map".args=["${escapeTomlString(resolve(SCRIPT_DIR, '../src/mcp/server.ts'))}"]`);
-    args.push('-c', `mcp_servers."code-map".env.MAP_INDEX="${escapeTomlString(opts.mapIndex)}"`);
+    args.push('-c', 'mcp_servers.code-map.command="node"');
+    args.push('-c', `mcp_servers.code-map.args=["${escapeTomlString(resolve(CODE_MAP_ROOT, 'src/mcp/server.ts'))}"]`);
+    args.push('-c', `mcp_servers.code-map.env.MAP_INDEX="${escapeTomlString(opts.mapIndex)}"`);
+  }
+  if (strategy === 'grep-mcp') {
+    args.push('-c', 'mcp_servers.grep-baseline.command="node"');
+    args.push('-c', `mcp_servers.grep-baseline.args=["${escapeTomlString(resolve(SCRIPT_DIR, 'grep-baseline-server.mjs'))}"]`);
+    args.push('-c', `mcp_servers.grep-baseline.env.GREP_BASELINE_ROOT="${escapeTomlString(opts.repo)}"`);
   }
   if (opts.auth === 'chatgpt') args.push('-c', 'forced_login_method="chatgpt"');
   if (sessionId) args.push(sessionId);
@@ -238,8 +260,8 @@ function taskPrompt(strategy, task, ordinal, total) {
     chunks.push('', 'Known independent symbol refs for this task. Use one code-map read call with refs containing all of them before answering:');
     chunks.push(task.mapRefs.map((r) => `- ${r}`).join('\n'));
   }
-  if (strategy === 'native' && Array.isArray(task.nativeHints) && task.nativeHints.length) {
-    chunks.push('', 'Native baseline hints. Use shell search/read commands to inspect these areas; do not use code-map:');
+  if ((strategy === 'native' || strategy === 'grep-mcp') && Array.isArray(task.nativeHints) && task.nativeHints.length) {
+    chunks.push('', 'Baseline hints. Search/read these areas; do not use code-map:');
     chunks.push(task.nativeHints.map((r) => `- ${r}`).join('\n'));
   }
   return chunks.join('\n');
@@ -501,6 +523,11 @@ function applyStrategyChecks(strategy, task, check, turn) {
   const misses = [...check.misses];
   if (strategy === 'native' && turn.mcpCallCount > 0) {
     misses.push(`native strategy used MCP ${turn.mcpCallCount} time(s)`);
+  }
+  if (strategy === 'grep-mcp') {
+    if ((turn.toolCounts['mcp:grep-baseline'] ?? 0) < 1) misses.push('grep-mcp strategy did not use the grep baseline tool');
+    if ((turn.toolCounts['mcp:code-map'] ?? 0) > 0) misses.push('grep-mcp strategy used code-map');
+    if (turn.mcpFailedCallCount > 0) misses.push(`grep-mcp strategy had ${turn.mcpFailedCallCount} failed MCP call(s)`);
   }
   if ((strategy === 'map-batch' || strategy === 'map-skill') && Array.isArray(task.mapRefs) && task.mapRefs.length) {
     if (turn.mcpBatchReadCallCount < 1) misses.push(`${strategy} strategy did not complete a batched code-map read call`);
